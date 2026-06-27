@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guia de Uso - Comprobantes de Pagos Digitales</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@600;700;800&display=swap');
+:root{
+  --guinda:#9B1B37;--guinda-dark:#7a1430;--guinda-light:#b52040;
+  --dorado:#C9A668;--dorado-pale:#f5ecd6;--dorado-light:#e8c98a;
+  --bg:#f0eae3;--white:#fff;--text:#1a1a1a;--muted:#888;
+  --card-bg:#fff;--r:14px;--r-sm:8px;
+  --shadow:0 2px 16px rgba(0,0,0,.08);--shadow-lg:0 8px 32px rgba(0,0,0,.12);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;overflow-x:hidden;}
+
+
+
+
+
+
+
+
+/* ── CARD CONTENEDOR (igual al sistema) ── */
+.main-card{
+  background:var(--card-bg);border-radius:18px 18px 0 0;
+  box-shadow:var(--shadow-lg);
+  min-height:calc(100vh - 160px);
+  max-width:480px;margin:0 auto;
+  overflow:hidden;
+}
+
+/* ── HERO DE LA GUIA ── */
+.guide-hero{
+  background:linear-gradient(160deg,var(--guinda-dark),var(--guinda));
+  padding:24px 24px 20px;text-align:center;
+}
+.guide-hero h1{
+  font-family:'Inter',sans-serif;font-size:1.05rem;font-weight:700;
+  color:#fff;margin-bottom:4px;
+}
+.guide-hero p{font-size:.75rem;color:rgba(255,255,255,.75);margin-bottom:16px;}
+.steps-chips{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;}
+.s-chip{
+  background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);
+  border-radius:20px;padding:4px 11px;font-size:.66rem;color:#fff;font-weight:600;
+}
+
+/* ── PROGRESS BAR ── */
+.progress-bar{
+  background:var(--white);padding:14px 20px;
+  border-bottom:1px solid #ede4da;
+  position:sticky;top:0;z-index:50;
+  box-shadow:0 2px 8px rgba(0,0,0,.05);
+}
+.progress-steps{display:flex;align-items:center;max-width:440px;margin:0 auto;}
+.step-dot{display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;position:relative;}
+.step-dot:not(:last-child)::after{content:'';position:absolute;top:12px;left:58%;width:84%;height:2px;background:#e8ddd5;z-index:0;transition:background .4s;}
+.step-dot.done:not(:last-child)::after{background:var(--dorado);}
+.dot-circle{width:24px;height:24px;border-radius:50%;background:#e8ddd5;color:#aaa;font-size:.65rem;font-weight:700;display:flex;align-items:center;justify-content:center;transition:all .35s;position:relative;z-index:1;}
+.step-dot.active .dot-circle{background:var(--guinda);color:#fff;box-shadow:0 0 0 3px rgba(155,27,55,.2);transform:scale(1.18);}
+.step-dot.done .dot-circle{background:var(--dorado);color:var(--guinda-dark);}
+.dot-label{font-size:.52rem;color:#bbb;text-align:center;font-weight:500;max-width:46px;line-height:1.2;}
+.step-dot.active .dot-label{color:var(--guinda);font-weight:700;}
+.step-dot.done .dot-label{color:var(--guinda);}
+
+/* ── STEP CARD ── */
+.step-card{display:none;animation:fadeUp .4s cubic-bezier(.22,1,.36,1) both;padding:20px 20px 0;}
+.step-card.visible{display:block;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+
+/* step header */
+.step-header{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+.step-num{
+  width:42px;height:42px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,var(--guinda),var(--guinda-light));
+  color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  font-family:'Montserrat',sans-serif;font-size:1.1rem;font-weight:800;
+  box-shadow:0 3px 12px rgba(155,27,55,.28);
+}
+.step-num span{font-size:.4rem;letter-spacing:1px;text-transform:uppercase;opacity:.85;margin-top:-1px;}
+.step-info h2{font-family:'Inter',sans-serif;font-size:1rem;font-weight:700;color:var(--guinda-dark);line-height:1.25;}
+.step-info p{font-size:.72rem;color:var(--muted);margin-top:2px;}
+
+/* instruccion */
+.instruccion{
+  display:flex;align-items:flex-start;gap:10px;
+  background:var(--dorado-pale);border-left:3px solid var(--dorado);
+  border-radius:0 var(--r-sm) var(--r-sm) 0;
+  padding:11px 14px;margin-bottom:14px;
+  animation:pulseborder 2s ease-in-out infinite;
+}
+@keyframes pulseborder{0%,100%{border-color:var(--dorado);}50%{border-color:var(--guinda);}}
+.arr{font-size:1.15rem;animation:bounce 1.2s ease-in-out infinite;flex-shrink:0;}
+@keyframes bounce{0%,100%{transform:translateX(0);}50%{transform:translateX(5px);}}
+.instruccion p{font-size:.78rem;color:var(--guinda-dark);font-weight:500;line-height:1.45;}
+.instruccion strong{color:var(--guinda);}
+
+/* mockup pantalla */
+.mock-screen{
+  background:#fff;border-radius:12px;
+  box-shadow:0 2px 12px rgba(0,0,0,.1);
+  overflow:hidden;border:1px solid #ede4da;
+  margin-bottom:14px;
+}
+.mock-topbar{
+  background:var(--bg);height:8px;
+  border-bottom:1px solid #e0d5cc;
+}
+.mock-body{padding:20px 16px;}
+
+/* mock login */
+.mock-logo-wrap{display:flex;flex-direction:column;align-items:center;margin-bottom:12px;}
+.mock-icon{
+  width:44px;height:44px;
+  background:linear-gradient(145deg,var(--guinda),var(--guinda-dark));
+  border-radius:10px 10px 10px 0;
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:8px;position:relative;
+}
+.mock-icon::after{content:'';position:absolute;bottom:0;left:0;width:11px;height:11px;background:var(--dorado);border-radius:0 4px 0 0;}
+.mock-icon svg{width:22px;height:22px;position:relative;z-index:1;}
+.mock-sys-name{font-size:.78rem;font-weight:700;color:var(--guinda);text-align:center;}
+.mock-sys-sub{font-size:.62rem;font-weight:700;color:var(--dorado);letter-spacing:1px;text-transform:uppercase;text-align:center;margin-bottom:12px;}
+.mock-field-label{font-size:.6rem;font-weight:700;color:var(--muted);letter-spacing:.8px;text-transform:uppercase;margin-bottom:4px;}
+.mock-field{
+  width:100%;height:36px;border:1.5px solid #ddd;border-radius:8px;
+  padding:0 12px;font-size:.76rem;color:#333;background:#fafafa;
+  display:flex;align-items:center;margin-bottom:10px;
+}
+.mock-field.active{border-color:var(--guinda);box-shadow:0 0 0 3px rgba(155,27,55,.1);background:#fff;}
+.mock-field.pass{color:#999;letter-spacing:2px;}
+.mock-ingresar{
+  width:100%;height:38px;background:var(--guinda);border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.8rem;font-weight:700;color:#fff;letter-spacing:.3px;
+  font-family:'Inter',sans-serif;
+}
+
+/* mock lista QNA */
+.mock-user-name{font-size:.9rem;font-weight:700;color:var(--text);text-align:center;margin-bottom:2px;}
+.mock-trimestre{font-size:.72rem;color:var(--guinda);text-align:center;font-weight:600;margin-bottom:2px;}
+.mock-select-label{font-size:.7rem;color:var(--muted);text-align:center;margin-bottom:12px;}
+.mock-section-label{font-size:.6rem;font-weight:700;color:var(--muted);letter-spacing:.8px;text-transform:uppercase;margin-bottom:5px;}
+.mock-row{
+  background:#fff;border:1px solid #ede4da;border-radius:8px;
+  padding:10px 14px;display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:8px;
+}
+.mock-row.active-row{border-color:var(--guinda);background:rgba(155,27,55,.03);}
+.mock-row-label{font-size:.82rem;font-weight:700;color:var(--text);}
+.mock-row-sub{font-size:.68rem;color:var(--muted);}
+.mock-row-arrow{color:var(--muted);font-size:.8rem;}
+.mock-row.active-row .mock-row-arrow{color:var(--guinda);}
+
+/* nomina list */
+.mock-nomina-row{
+  background:#fff;border:1px solid #ede4da;border-radius:8px;
+  padding:10px 14px;display:flex;align-items:center;gap:10px;margin-bottom:7px;
+}
+.mock-nomina-row.sel{border-color:var(--guinda);background:rgba(155,27,55,.03);}
+.nom-radio{width:14px;height:14px;border-radius:50%;border:2px solid #ccc;flex-shrink:0;transition:all .3s;}
+.mock-nomina-row.sel .nom-radio{background:var(--guinda);border-color:var(--guinda);}
+.nom-text{font-size:.78rem;font-weight:600;color:#333;}
+
+/* drive */
+.mock-drive-header{display:flex;align-items:center;gap:8px;padding:8px 0 10px;border-bottom:1px solid #f0e8e0;margin-bottom:10px;}
+.drive-g{width:20px;height:20px;background:#4285f4;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:.6rem;color:#fff;font-weight:700;flex-shrink:0;}
+.drive-path{font-size:.62rem;color:#555;}
+.mock-folder-row{background:#f8f4ef;border-radius:7px;padding:8px 12px;display:flex;align-items:center;gap:8px;border:1px solid #e8ddd5;margin-bottom:8px;}
+.drag-area{
+  border:2px dashed var(--dorado);border-radius:10px;
+  padding:20px 14px;text-align:center;background:linear-gradient(135deg,#fff9f0,#fdf5e8);
+}
+.drag-file-chip{
+  display:inline-flex;align-items:center;gap:7px;
+  background:#fff;border:1px solid #ddd;border-radius:7px;
+  padding:6px 12px;font-size:.66rem;color:#333;
+  box-shadow:0 2px 6px rgba(0,0,0,.08);margin-bottom:10px;
+  animation:dragit 2.5s ease-in-out infinite;
+}
+@keyframes dragit{0%{transform:translate(0,0) rotate(0deg);opacity:1;}40%{transform:translate(16px,22px) rotate(3deg);}75%{transform:translate(38px,44px) rotate(5deg);opacity:.65;}100%{transform:translate(0,0) rotate(0deg);opacity:1;}}
+.drag-area p{font-size:.68rem;color:var(--muted);}
+.drag-area strong{color:var(--guinda);}
+
+/* exito */
+.mock-exito{text-align:center;padding:12px 0;}
+.exito-icon{width:52px;height:52px;background:linear-gradient(135deg,#e8f5e9,#c8e6c9);border-radius:50%;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;border:3px solid #4caf50;}
+.mock-cerrar-btn{background:#c62828;color:#fff;border-radius:20px;padding:7px 18px;font-size:.7rem;font-weight:600;display:inline-flex;align-items:center;gap:5px;margin-top:8px;}
+
+/* tip */
+.tip{
+  background:#fff;border:1px solid rgba(155,27,55,.12);border-radius:var(--r-sm);
+  padding:11px 14px;display:flex;align-items:flex-start;gap:9px;
+  font-size:.74rem;color:var(--muted);line-height:1.5;margin-bottom:6px;
+}
+.tip-i{font-size:.88rem;flex-shrink:0;margin-top:1px;}
+.tip strong{color:var(--guinda);}
+
+/* ── NAVIGATION ── */
+.nav-wrap{
+  position:sticky;bottom:0;background:#fff;
+  padding:14px 20px 20px;border-top:1px solid #ede4da;
+  display:flex;justify-content:space-between;align-items:center;gap:12px;
+  box-shadow:0 -4px 16px rgba(0,0,0,.06);
+}
+.btn-prev{
+  padding:10px 20px;border-radius:50px;font-family:'Inter',sans-serif;
+  font-size:.76rem;font-weight:700;cursor:pointer;transition:all .2s;
+  background:transparent;border:2px solid var(--guinda);color:var(--guinda);
+}
+.btn-prev:hover{background:var(--guinda);color:#fff;}
+.btn-prev:disabled{opacity:.3;cursor:default;}
+.btn-prev:disabled:hover{background:transparent;color:var(--guinda);}
+.step-ctr{font-size:.72rem;color:var(--muted);font-weight:500;}
+.btn-next{
+  padding:10px 22px;border-radius:50px;font-family:'Inter',sans-serif;
+  font-size:.76rem;font-weight:700;cursor:pointer;transition:all .2s;border:none;
+  background:var(--guinda);color:#fff;
+  box-shadow:0 3px 12px rgba(155,27,55,.28);
+}
+.btn-next:hover{transform:translateY(-2px);box-shadow:0 5px 18px rgba(155,27,55,.38);}
+.btn-next.finish{background:linear-gradient(135deg,#2e7d32,#43a047);}
+
+/* ── COMPLETE ── */
+.complete-wrap{padding:32px 20px 20px;text-align:center;}
+.complete-icon{width:72px;height:72px;background:linear-gradient(135deg,#e8f5e9,#c8e6c9);border-radius:50%;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;font-size:2rem;border:4px solid #4caf50;animation:popin .6s cubic-bezier(.22,1,.36,1) both;}
+@keyframes popin{from{transform:scale(0);opacity:0;}to{transform:scale(1);opacity:1;}}
+.complete-wrap h2{font-family:'Inter',sans-serif;font-size:1.2rem;font-weight:700;color:#2e7d32;margin-bottom:8px;}
+.complete-wrap>p{font-size:.8rem;color:var(--muted);max-width:300px;margin:0 auto 20px;line-height:1.6;}
+.recap{display:flex;flex-direction:column;gap:7px;max-width:300px;margin:0 auto 22px;text-align:left;}
+.recap-item{display:flex;align-items:center;gap:9px;font-size:.74rem;color:var(--muted);padding:8px 11px;background:#f9fbe7;border-radius:var(--r-sm);border:1px solid #dcedc8;}
+.btn-back-link{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--guinda);color:#fff;border:none;border-radius:50px;
+  padding:11px 26px;font-family:'Inter',sans-serif;font-size:.8rem;font-weight:700;
+  cursor:pointer;transition:all .2s;text-decoration:none;
+}
+.btn-back-link:hover{transform:translateY(-2px);box-shadow:0 5px 16px rgba(155,27,55,.3);}
+
+/* volver link */
+.volver-btn{
+  width:100%;padding:14px;text-align:center;border:none;background:transparent;
+  font-size:.82rem;font-weight:600;color:var(--guinda);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  border-top:1px solid #ede4da;margin-top:8px;
+}
+.volver-btn:hover{background:rgba(155,27,55,.04);}
+
+.hidden{display:none!important;}
+
+/* nomina cycle */
+.nom-anim{animation:nom-pulse 1.4s ease-in-out infinite;}
+
+@media(max-width:500px){
+  .dot-label{display:none;}
+  .sys-header{padding:20px 16px 0;}
+}
+</style>
+</head>
+<body>
+
+<!-- CARD PRINCIPAL -->
+<div class="main-card">
+
+  <!-- Hero -->
+  <div class="guide-hero">
+    <h1>&#128216; Guia de uso del sistema</h1>
+    <p>Sigue los 6 pasos para subir tus comprobantes correctamente</p>
+    <div class="steps-chips">
+      <div class="s-chip">&#128274; Login</div>
+      <div class="s-chip">&#128197; Trimestre</div>
+      <div class="s-chip">&#128198; Quincena</div>
+      <div class="s-chip">&#128203; Nomina</div>
+      <div class="s-chip">&#128193; Drive</div>
+      <div class="s-chip">&#128682; Salir</div>
+    </div>
+  </div>
+
+  <!-- Progress -->
+  <div class="progress-bar">
+    <div class="progress-steps" id="progressSteps"></div>
+  </div>
+
+  <!-- PASOS -->
+
+  <!-- 1: Login -->
+  <div class="step-card visible" id="step-1">
+    <div class="step-header">
+      <div class="step-num">1<span>PASO</span></div>
+      <div class="step-info"><h2>Iniciar sesion</h2><p>Accede con tus credenciales institucionales</p></div>
+    </div>
+    <div class="instruccion"><span class="arr">&#128073;</span><p>Ingresa tu <strong>usuario</strong> (ej. HG_VICTORIA) y tu <strong>contrasena</strong>. Presiona <strong>"Ingresar"</strong> para entrar al sistema.</p></div>
+    <div class="mock-screen">
+      <div class="mock-topbar"></div>
+      <div class="mock-body">
+        <div class="mock-logo-wrap">
+          <img src="data:image/jpeg;base64,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" alt="SST" style="width:64px;height:64px;object-fit:contain;margin-bottom:8px;">
+          <div class="mock-sys-name">Servicios de Salud de Tamaulipas</div>
+          <div class="mock-sys-sub">Comprobantes de Pagos Digitales</div>
+        </div>
+        <div class="mock-field-label">Usuario</div>
+        <div class="mock-field active" style="color:#999;font-style:italic;">Ej. HG_VICTORIA</div>
+        <div class="mock-field-label">Contrasena</div>
+        <div class="mock-field pass">&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;</div>
+        <div class="mock-ingresar">Ingresar</div>
+      </div>
+    </div>
+    <div class="tip"><span class="tip-i">&#128161;</span><span>Tu usuario es el <strong>codigo de tu unidad medica</strong> asignado por Recursos Humanos. No lo compartas con nadie.</span></div>
+  </div>
+
+  <!-- 2: Trimestre -->
+  <div class="step-card" id="step-2">
+    <div class="step-header">
+      <div class="step-num">2<span>PASO</span></div>
+      <div class="step-info"><h2>Seleccionar trimestre</h2><p>Elige el periodo de reporte</p></div>
+    </div>
+    <div class="instruccion"><span class="arr">&#128073;</span><p>Al ingresar veras los trimestres disponibles. Selecciona el <strong>trimestre vigente</strong> indicado por tu jefatura.</p></div>
+    <div class="mock-screen">
+      <div class="mock-topbar"></div>
+      <div class="mock-body">
+        <div class="mock-logo-wrap">
+          <img src="data:image/jpeg;base64,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" alt="SST" style="width:48px;height:48px;object-fit:contain;margin-bottom:6px;">
+          <div class="mock-sys-name">Servicios de Salud de Tamaulipas</div>
+          <div class="mock-sys-sub">Comprobantes de Pagos Digitales</div>
+        </div>
+        <div style="font-size:.75rem;font-weight:700;color:var(--text);text-align:center;margin-bottom:2px;">J. I VICTORIA</div>
+        <div style="font-size:.7rem;color:var(--muted);text-align:center;margin-bottom:10px;">Selecciona el trimestre</div>
+        <div class="mock-section-label">TRIMESTRE</div>
+        <div class="mock-row" id="tri1" style="border-color:var(--guinda);background:rgba(155,27,55,.03);">
+          <div><div class="mock-row-label">1&deg; Trimestre</div><div class="mock-row-sub">Enero &ndash; Marzo</div></div>
+          <div class="mock-row-arrow" style="color:var(--guinda);">&#8250;</div>
+        </div>
+        <div class="mock-row" style="opacity:.5;"><div><div class="mock-row-label">2&deg; Trimestre</div><div class="mock-row-sub">Abril &ndash; Junio</div></div><div class="mock-row-arrow">&#8250;</div></div>
+        <div class="mock-row" style="opacity:.5;"><div><div class="mock-row-label">3&deg; Trimestre</div><div class="mock-row-sub">Julio &ndash; Septiembre</div></div><div class="mock-row-arrow">&#8250;</div></div>
+        <div class="mock-row" style="opacity:.5;"><div><div class="mock-row-label">4&deg; Trimestre</div><div class="mock-row-sub">Octubre &ndash; Diciembre</div></div><div class="mock-row-arrow">&#8250;</div></div>
+      </div>
+    </div>
+    <div class="tip"><span class="tip-i">&#128161;</span><span>Solo estaran disponibles los trimestres del <strong>periodo activo</strong>. Consulta con tu jefatura si tienes duda.</span></div>
+  </div>
+
+  <!-- 3: Quincena -->
+  <div class="step-card" id="step-3">
+    <div class="step-header">
+      <div class="step-num">3<span>PASO</span></div>
+      <div class="step-info"><h2>Seleccionar quincena</h2><p>Esta es la pantalla donde estas ahora</p></div>
+    </div>
+    <div class="instruccion"><span class="arr">&#128073;</span><p>Elige la <strong>QNA</strong> que corresponde al comprobante que vas a subir. Cada trimestre tiene <strong>6 quincenas</strong>.</p></div>
+    <div class="mock-screen">
+      <div class="mock-topbar"></div>
+      <div class="mock-body">
+        <div class="mock-user-name">J. I VICTORIA</div>
+        <div class="mock-trimestre">1&deg; Trimestre</div>
+        <div class="mock-select-label">Selecciona la quincena (QNA)</div>
+        <div class="mock-section-label">Quincena &middot; 1&deg; Trimestre</div>
+        <div class="mock-row" style="opacity:.5;"><div><div class="mock-row-label">QNA 01</div><div class="mock-row-sub">40 opciones</div></div><div class="mock-row-arrow">&#8250;</div></div>
+        <div class="mock-section-label" style="margin-top:4px;">Quincena &middot; 1&deg; Trimestre</div>
+        <div class="mock-row" style="opacity:.5;"><div><div class="mock-row-label">QNA 02</div><div class="mock-row-sub">20 opciones</div></div><div class="mock-row-arrow">&#8250;</div></div>
+        <div class="mock-section-label" style="margin-top:4px;">Quincena &middot; 1&deg; Trimestre</div>
+        <div class="mock-row" id="qna3row" style="border-color:var(--guinda);background:rgba(155,27,55,.03);">
+          <div><div class="mock-row-label">QNA 03</div><div class="mock-row-sub">20 opciones</div></div>
+          <div class="mock-row-arrow" style="color:var(--guinda);">&#8250;</div>
+        </div>
+      </div>
+    </div>
+    <div class="tip"><span class="tip-i">&#128161;</span><span>Revisa la <strong>fecha del comprobante</strong> para saber que quincena seleccionar. QNA 01 = 1 al 15 del primer mes del trimestre.</span></div>
+  </div>
+
+  <!-- 4: Nomina -->
+  <div class="step-card" id="step-4">
+    <div class="step-header">
+      <div class="step-num">4<span>PASO</span></div>
+      <div class="step-info"><h2>Tipo de nomina</h2><p>Selecciona la categoria del comprobante</p></div>
+    </div>
+    <div class="instruccion"><span class="arr">&#128073;</span><p>Despues de elegir la quincena apareceran los <strong>tipos de nomina</strong>. Selecciona el que corresponde a tu comprobante.</p></div>
+    <div class="mock-screen">
+      <div class="mock-topbar"></div>
+      <div class="mock-body">
+        <div class="mock-user-name" style="margin-bottom:2px;">J. I VICTORIA</div>
+        <div class="mock-trimestre">QNA 03 &mdash; Tipo de nomina</div>
+        <div style="height:8px;"></div>
+        <div class="mock-nomina-row sel" id="nom1"><div class="nom-radio"></div><div class="nom-text">BASE</div></div>
+        <div class="mock-nomina-row" id="nom2"><div class="nom-radio"></div><div class="nom-text">CONFIANZA</div></div>
+        <div class="mock-nomina-row" id="nom3"><div class="nom-radio"></div><div class="nom-text">EXTRAORDINARIA</div></div>
+        <div class="mock-nomina-row" id="nom4"><div class="nom-radio"></div><div class="nom-text">COMPENSACION</div></div>
+        <div class="mock-nomina-row" id="nom5"><div class="nom-radio"></div><div class="nom-text">OTRA</div></div>
+      </div>
+    </div>
+    <div class="tip"><span class="tip-i">&#128161;</span><span>El tipo de nomina aparece en el <strong>encabezado de tu comprobante PDF</strong>. Consulta a Recursos Humanos si tienes duda.</span></div>
+  </div>
+
+  <!-- 5: Drive -->
+  <div class="step-card" id="step-5">
+    <div class="step-header">
+      <div class="step-num">5<span>PASO</span></div>
+      <div class="step-info"><h2>Subir el comprobante</h2><p>Arrastra tu PDF a la carpeta de Drive</p></div>
+    </div>
+    <div class="instruccion"><span class="arr">&#128073;</span><p>El sistema abrira automaticamente la <strong>carpeta de tu unidad en Google Drive</strong>. Arrastra tu archivo PDF desde el escritorio hacia esa carpeta.</p></div>
+    <div class="mock-screen">
+      <div class="mock-topbar"></div>
+      <div class="mock-body">
+        <div class="mock-drive-header">
+          <div class="drive-g">G</div>
+          <div class="drive-path"><strong>Mi unidad</strong> &rsaquo; 1T &rsaquo; QNA03 &rsaquo; BASE &rsaquo; HG_VICTORIA</div>
+        </div>
+        <div class="mock-folder-row"><span style="font-size:.95rem;">&#128193;</span><span style="font-size:.68rem;color:#555;">Carpeta lista para tu archivo</span></div>
+        <div class="drag-area">
+          <div class="drag-file-chip">&#128196;&nbsp; comprobante_qna03_base.pdf</div>
+          <p>Arrastra aqui tu archivo <strong>PDF</strong></p>
+          <p style="font-size:.62rem;margin-top:3px;">o haz clic para buscarlo</p>
+        </div>
+      </div>
+    </div>
+    <div class="tip"><span class="tip-i">&#128161;</span><span>El archivo debe ser <strong>PDF</strong>. Nombra el archivo con la quincena y tipo: <strong>QNA03_BASE.pdf</strong> para facilitar su identificacion.</span></div>
+  </div>
+
+  <!-- 6: Cerrar -->
+  <div class="step-card" id="step-6">
+    <div class="step-header">
+      <div class="step-num">6<span>PASO</span></div>
+      <div class="step-info"><h2>Cerrar sesion</h2><p>Finaliza de forma segura</p></div>
+    </div>
+    <div class="instruccion"><span class="arr">&#128073;</span><p>Una vez subido el comprobante, regresa al sistema y presiona <strong>"&#8592; Volver"</strong> hasta la pantalla principal, luego cierra sesion.</p></div>
+    <div class="mock-screen">
+      <div class="mock-topbar"></div>
+      <div class="mock-body">
+        <div class="mock-exito">
+          <div class="exito-icon">&#9989;</div>
+          <div style="font-size:.85rem;font-weight:700;color:#2e7d32;margin-bottom:4px;">&#161;Archivo subido correctamente!</div>
+          <div style="font-size:.7rem;color:var(--muted);line-height:1.5;margin-bottom:10px;">Tu comprobante ha sido guardado<br>en la carpeta de tu unidad.</div>
+          <div class="mock-cerrar-btn">&#8592; Volver y cerrar sesion</div>
+        </div>
+      </div>
+    </div>
+    <div class="tip"><span class="tip-i">&#128161;</span><span>Cierra sesion siempre que termines, especialmente en <strong>equipos compartidos</strong>. Protege la informacion de tu unidad.</span></div>
+  </div>
+
+  <!-- COMPLETE -->
+  <div class="step-card" id="step-complete">
+    <div class="complete-wrap">
+      <div class="complete-icon">&#127881;</div>
+      <h2>&#161;Guia completada!</h2>
+      <p>Ya conoces el proceso. Repite estos pasos cada quincena.</p>
+      <div class="recap">
+        <div class="recap-item"><span>&#128274;</span> Ingresar con usuario y contrasena</div>
+        <div class="recap-item"><span>&#128197;</span> Seleccionar el trimestre vigente</div>
+        <div class="recap-item"><span>&#128198;</span> Elegir la quincena correcta</div>
+        <div class="recap-item"><span>&#128203;</span> Indicar el tipo de nomina</div>
+        <div class="recap-item"><span>&#128193;</span> Subir el PDF a Drive</div>
+        <div class="recap-item"><span>&#128682;</span> Cerrar sesion al finalizar</div>
+      </div>
+      <button class="btn-back-link" onclick="restartGuide()">&#128260;&nbsp; Ver guia de nuevo</button>
+    </div>
+  </div>
+
+  <!-- NAV -->
+  <div class="nav-wrap" id="navWrap">
+    <button class="btn-prev" id="btnPrev" onclick="changeStep(-1)" disabled>&#8592; Anterior</button>
+    <span class="step-ctr" id="stepCtr">Paso 1 de 6</span>
+    <button class="btn-next" id="btnNext" onclick="changeStep(1)">Siguiente &#8594;</button>
+  </div>
+
+  <!-- Volver al sistema -->
+  <button class="volver-btn" onclick="history.back()">&#8592; Volver al sistema</button>
+
+</div><!-- /main-card -->
+
+<script>
+const TOTAL=6;
+let cur=1;
+const labels=['Login','Trimestre','Quincena','Nomina','Drive','Cerrar'];
+
+function buildProgress(){
+  const c=document.getElementById('progressSteps');c.innerHTML='';
+  labels.forEach((l,i)=>{
+    const d=document.createElement('div');d.className='step-dot';d.id='pd'+(i+1);
+    d.innerHTML='<div class="dot-circle">'+(i+1)+'</div><div class="dot-label">'+l+'</div>';
+    c.appendChild(d);
+  });
+  updateProg(1);
+}
+
+function updateProg(n){
+  for(let i=1;i<=TOTAL;i++){
+    const d=document.getElementById('pd'+i);
+    d.classList.remove('active','done');
+    if(i<n)d.classList.add('done');
+    else if(i===n)d.classList.add('active');
+  }
+}
+
+function showStep(n){
+  document.querySelectorAll('.step-card').forEach(c=>c.classList.remove('visible'));
+  const id=n>TOTAL?'step-complete':'step-'+n;
+  document.getElementById(id).classList.add('visible');
+  updateProg(n);
+  document.getElementById('stepCtr').textContent=n>TOTAL?' ':('Paso '+n+' de '+TOTAL);
+  document.getElementById('btnPrev').disabled=(n<=1);
+  document.getElementById('navWrap').style.display=n>TOTAL?'none':'flex';
+  const nb=document.getElementById('btnNext');
+  nb.textContent=n===TOTAL?'Finalizar ✓':'Siguiente →';
+  nb.classList.toggle('finish',n===TOTAL);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function changeStep(dir){
+  cur=Math.max(1,Math.min(TOTAL+1,cur+dir));
+  showStep(cur);
+}
+
+function restartGuide(){cur=1;showStep(1);}
+
+// nomina animation
+let nomIdx=0;const noms=['nom1','nom2','nom3','nom4','nom5'];
+setInterval(()=>{
+  const card=document.getElementById('step-4');
+  if(!card||!card.classList.contains('visible'))return;
+  noms.forEach((id,i)=>{
+    const el=document.getElementById(id);if(!el)return;
+    el.classList.toggle('sel',i===nomIdx);
+    const r=el.querySelector('.nom-radio');
+    r.style.background=i===nomIdx?'#9B1B37':'';
+    r.style.borderColor=i===nomIdx?'#9B1B37':'';
+  });
+  nomIdx=(nomIdx+1)%noms.length;
+},1400);
+
+// QNA row cycle
+let qnaIdx=0;const qnas=[0,1,2];
+setInterval(()=>{
+  const card=document.getElementById('step-3');
+  if(!card||!card.classList.contains('visible'))return;
+  const rows=card.querySelectorAll('.mock-row');
+  rows.forEach((r,i)=>{
+    r.style.borderColor=i===qnaIdx?'#9B1B37':'';
+    r.style.background=i===qnaIdx?'rgba(155,27,55,.03)':'';
+    r.style.opacity=i===qnaIdx?'1':'0.5';
+    const arr=r.querySelector('.mock-row-arrow');
+    if(arr)arr.style.color=i===qnaIdx?'#9B1B37':'#888';
+  });
+  qnaIdx=(qnaIdx+1)%qnas.length;
+},1600);
+
+buildProgress();
+</script>
+</body>
+</html>
