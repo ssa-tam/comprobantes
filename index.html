@@ -445,8 +445,9 @@ function cerrarConfirm() {
 }
 
 async function confirmarMarcar() {
+  const trimAMarcar = TRIM_A_MARCAR; // guardar ANTES de cerrar
   cerrarConfirm();
-  const trimAMarcar = TRIM_A_MARCAR;
+  console.log("DEBUG marcar:", "USR:", USR, "TRIM:", trimAMarcar);
   try {
     const data = await apiFetch({
       usuario:   USR,
@@ -454,7 +455,7 @@ async function confirmarMarcar() {
       action:    "marcar_completado",
       trimestre: trimAMarcar
     });
-    console.log("DEBUG marcar:", JSON.stringify(data), "USR:", USR, "TRIM:", trimAMarcar);
+    console.log("DEBUG resp:", JSON.stringify(data));
     if (data.ok) {
       // Formato de fecha en español
       const hoy = new Date();
