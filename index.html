@@ -366,7 +366,8 @@ function renderTrimestres(trimestres) {
       const btnM = document.createElement('button');
       btnM.className = 'btn-marcar';
       btnM.innerHTML = '☑ Marcar trimestre como completado';
-      btnM.onclick = (e) => { e.stopPropagation(); abrirConfirm(t.trimestre); };
+      btnM.setAttribute('data-trimestre', t.trimestre);
+      btnM.onclick = function(e) { e.stopPropagation(); abrirConfirm(this.getAttribute('data-trimestre')); };
       g.appendChild(btnM);
     }
 
