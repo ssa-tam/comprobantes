@@ -79,44 +79,23 @@
     .opt-btn .tag-gold { color: #C9A668; background: #F5F0EA; }
     .opt-btn svg { width: 16px; height: 16px; flex-shrink: 0; color: #C9A668; }
 
+
+    /* Estatus trimestre */
+    .trim-completado { font-size: 11px; color: #2E7D32; font-weight: 700; display: flex; align-items: center; gap: 4px; margin-top: 4px; }
+    .btn-marcar { width: 100%; padding: 8px; margin-top: 6px; font-size: 12px; font-weight: 700; font-family: Arial, sans-serif; color: #2E7D32; background: none; border: 1.5px solid #A5D6A7; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px; transition: background .15s; }
+    .btn-marcar:hover { background: #F1F8E9; }
+    .btn-marcar.marcado { color: #B4A691; border-color: #E3D9CC; cursor: default; }
+    .confirm-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200; align-items: center; justify-content: center; }
+    .confirm-overlay.show { display: flex; }
+    .confirm-box { background: #fff; border-radius: 14px; padding: 24px 20px; width: 88%; max-width: 340px; text-align: center; box-shadow: 0 8px 32px rgba(0,0,0,0.2); }
+    .confirm-box h3 { font-size: 15px; font-weight: 700; color: #9B1B37; margin-bottom: 8px; }
+    .confirm-box p { font-size: 13px; color: #7A6C5D; margin-bottom: 18px; line-height: 1.5; }
+    .confirm-btns { display: flex; gap: 10px; }
+    .confirm-btns button { flex: 1; padding: 10px; border-radius: 8px; font-size: 13px; font-weight: 700; font-family: Arial, sans-serif; cursor: pointer; border: none; }
+    .btn-cancel { background: #F5F0EA; color: #9B1B37; border: 1.5px solid #E3D9CC !important; }
+    .btn-confirm { background: linear-gradient(135deg, #2E7D32, #43A047); color: #fff; }
     .footer { text-align: center; margin-top: 1.5rem; font-size: 11px; color: #B4A691; display: flex; align-items: center; justify-content: center; gap: 6px; }
     .footer .dot { width: 3px; height: 3px; border-radius: 50%; background: #C9A668; }
-    .btn-guia { width: 100%; padding: 10px; margin-top: 8px; font-size: 13px; font-weight: 600; font-family: Arial, sans-serif; color: #9B1B37; background: none; border: 1.5px solid #E3D9CC; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: background .15s; }
-    .btn-guia:hover { background: #FBF8F4; }
-    /* Pantalla guía embebida */
-    #s-guia { padding: 0; }
-    .guia-header { display: flex; align-items: center; gap: 10px; padding: 12px 0 14px; border-bottom: 1.5px solid #F0E6D8; margin-bottom: 14px; }
-    .guia-header button { background: none; border: none; color: #9B1B37; font-size: 18px; cursor: pointer; padding: 0 4px; }
-    .guia-header span { font-size: 14px; font-weight: 700; color: #9B1B37; }
-    .guia-steps { display: flex; gap: 6px; margin-bottom: 16px; overflow-x: auto; padding-bottom: 4px; }
-    .guia-steps::-webkit-scrollbar { height: 3px; } 
-    .guia-steps::-webkit-scrollbar-thumb { background: #E3D9CC; border-radius: 2px; }
-    .g-step-btn { flex-shrink: 0; padding: 5px 11px; border-radius: 20px; border: 1.5px solid #E3D9CC; background: #FBF8F4; color: #9B1B37; font-size: 11px; font-weight: 700; cursor: pointer; font-family: Arial, sans-serif; transition: all .15s; }
-    .g-step-btn.active { background: #9B1B37; color: #fff; border-color: #9B1B37; }
-    .g-panel { display: none; }
-    .g-panel.active { display: block; }
-    .g-instruccion { background: #FBF1DE; border-left: 3px solid #C9A668; border-radius: 0 6px 6px 0; padding: 10px 13px; font-size: 12px; color: #6B4A00; line-height: 1.55; margin-bottom: 13px; }
-    .g-instruccion strong { color: #9B1B37; }
-    .g-mock { background: #F5F0EA; border-radius: 8px; padding: 14px; margin-bottom: 11px; }
-    .g-mock-bar { background: #9B1B37; border-radius: 5px 5px 0 0; height: 6px; margin: -14px -14px 12px; }
-    .g-mock-logo { text-align: center; margin-bottom: 10px; }
-    .g-mock-logo img { height: 36px; object-fit: contain; }
-    .g-mock-title { text-align: center; font-size: 12px; font-weight: 700; color: #9B1B37; }
-    .g-mock-sub { text-align: center; font-size: 10px; color: #C9A668; font-weight: 600; letter-spacing: .05em; margin-bottom: 10px; }
-    .g-field { background: #fff; border: 1.5px solid #E3D9CC; border-radius: 6px; padding: 7px 10px; font-size: 11px; color: #999; margin-bottom: 7px; }
-    .g-field.active { border-color: #9B1B37; }
-    .g-btn-mock { background: linear-gradient(135deg,#9B1B37,#C8313D); color: #fff; border-radius: 6px; padding: 8px; text-align: center; font-size: 12px; font-weight: 700; }
-    .g-opt { background: #fff; border: 1.5px solid #E3D9CC; border-radius: 6px; padding: 9px 11px; font-size: 12px; font-weight: 600; color: #6B1226; margin-bottom: 6px; display: flex; justify-content: space-between; }
-    .g-opt.sel { border-color: #9B1B37; background: #FCEAEA; }
-    .g-tip { background: #fff; border: 1px solid #E3D9CC; border-radius: 6px; padding: 9px 12px; font-size: 11px; color: #888; line-height: 1.5; }
-    .g-tip strong { color: #9B1B37; }
-    .g-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 14px; }
-    .g-nav-btn { padding: 8px 18px; border-radius: 20px; font-size: 12px; font-weight: 700; font-family: Arial, sans-serif; cursor: pointer; border: none; transition: all .2s; }
-    .g-prev { background: none; border: 1.5px solid #9B1B37; color: #9B1B37; }
-    .g-prev:disabled { opacity: .3; cursor: default; }
-    .g-next { background: #9B1B37; color: #fff; }
-    .g-next.done { background: #2E7D32; }
-    .g-counter { font-size: 11px; color: #B4A691; }
   </style>
 </head>
 <body>
@@ -161,22 +140,6 @@
     <p class="screen-sub">Selecciona el trimestre</p>
     <div class="opt-list" id="list-trim"></div>
     <button class="btn btn-back" onclick="goTo('s-login')">← Volver a iniciar sesión</button>
-    <button class="btn-guia" onclick="abrirGuia()">📖 Ver guía de uso</button>
-  </div>
-
-  <!-- PANTALLA: Guía embebida -->
-  <div id="s-guia" class="screen">
-    <div class="guia-header">
-      <button onclick="cerrarGuia()">←</button>
-      <span>Guía de uso del sistema</span>
-    </div>
-    <div class="guia-steps" id="guia-steps"></div>
-    <div id="guia-panels"></div>
-    <div class="g-nav">
-      <button class="g-nav-btn g-prev" id="g-prev" onclick="guiaStep(-1)" disabled>← Anterior</button>
-      <span class="g-counter" id="g-counter">Paso 1 de 6</span>
-      <button class="g-nav-btn g-next" id="g-next" onclick="guiaStep(1)">Siguiente →</button>
-    </div>
   </div>
 
   <!-- PANTALLA: QNAs -->
@@ -195,6 +158,18 @@
     <p class="screen-sub">Selecciona la nómina y tipo a subir</p>
     <div class="opt-list" id="list-tipos"></div>
     <button class="btn btn-back" onclick="goTo('s-qna')">← Volver a quincenas</button>
+  </div>
+
+  <!-- Overlay confirmación -->
+  <div class="confirm-overlay" id="confirm-overlay">
+    <div class="confirm-box">
+      <h3>¿Confirmar cierre?</h3>
+      <p>Estás marcando el <strong id="confirm-trim-label"></strong> como <strong>Completado</strong>.<br>Solo el administrador podrá revertir esta acción.</p>
+      <div class="confirm-btns">
+        <button class="btn-cancel" onclick="cerrarConfirm()">Cancelar</button>
+        <button class="btn-confirm" onclick="confirmarMarcar()">✓ Sí, completado</button>
+      </div>
+    </div>
   </div>
 
   <div class="footer"><span>Secretaría de Salud de Tamaulipas</span><span class="dot"></span><span>2026</span></div>
@@ -371,7 +346,28 @@ function renderTrimestres(trimestres) {
     const btn = document.createElement('button'); btn.className = 'opt-btn';
     btn.innerHTML = `<span>${t.trimestre}</span><span class="tag tag-gold">${t.count} opciones</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>`;
     btn.onclick = () => selTrimestre(t.trimestre);
-    g.appendChild(btn); list.appendChild(g);
+    g.appendChild(btn);
+
+    // Estatus completado
+    if (t.completado) {
+      const comp = document.createElement('div');
+      comp.className = 'trim-completado';
+      comp.innerHTML = '✅ Completado el ' + t.fecha;
+      g.appendChild(comp);
+      const btnM = document.createElement('button');
+      btnM.className = 'btn-marcar marcado';
+      btnM.textContent = '✓ Trimestre completado';
+      btnM.disabled = true;
+      g.appendChild(btnM);
+    } else {
+      const btnM = document.createElement('button');
+      btnM.className = 'btn-marcar';
+      btnM.innerHTML = '☑ Marcar trimestre como completado';
+      btnM.onclick = (e) => { e.stopPropagation(); abrirConfirm(t.trimestre); };
+      g.appendChild(btnM);
+    }
+
+    list.appendChild(g);
   });
   goTo('s-trim');
 }
@@ -431,145 +427,39 @@ function renderTipos(opciones) {
 
 // ── Enter key ────────────────────────────────────────────────
 
-// ── GUÍA EMBEBIDA ─────────────────────────────────────────────
-const GUIA_PASOS = [
-  {
-    label: "Login",
-    instruccion: "Ingresa tu <strong>usuario</strong> (ej. HG_VICTORIA) y tu <strong>contraseña</strong>. Presiona <strong>\"Ingresar\"</strong> para entrar al sistema.",
-    mock: `<div class="g-mock-bar"></div>
-           <div class="g-mock-logo"><img src="data:image/jpeg;base64,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" alt="SST"></div>
-           <div class="g-mock-title">Servicios de Salud de Tamaulipas</div>
-           <div class="g-mock-sub">COMPROBANTES DE PAGOS DIGITALES</div>
-           <div class="g-field active" style="color:#999;font-style:italic;">Ej. HG_VICTORIA</div>
-           <div class="g-field">••••••••</div>
-           <div class="g-btn-mock">Ingresar</div>`,
-    tip: "Tu usuario es el <strong>código de tu unidad</strong> asignado por Recursos Humanos."
-  },
-  {
-    label: "Trimestre",
-    instruccion: "Al ingresar verás los trimestres disponibles. Selecciona el <strong>trimestre vigente</strong> indicado por tu jefatura.",
-    mock: `<div class="g-mock-bar"></div>
-           <div class="g-mock-title" style="margin-bottom:4px;">J. I VICTORIA</div>
-           <div class="g-mock-sub">Selecciona el trimestre</div>
-           <div class="g-opt sel">1° Trimestre <span style="color:#C9A668;font-size:11px;">140 opciones ›</span></div>
-           <div class="g-opt" style="opacity:.5;">2° Trimestre <span>›</span></div>`,
-    tip: "Solo estarán disponibles los trimestres del <strong>periodo activo</strong>."
-  },
-  {
-    label: "Quincena",
-    instruccion: "Elige la <strong>quincena (QNA)</strong> que corresponde al comprobante que vas a subir.",
-    mock: `<div class="g-mock-bar"></div>
-           <div class="g-mock-title" style="margin-bottom:2px;">J. I VICTORIA</div>
-           <div class="g-mock-sub">1° Trimestre · Selecciona la quincena</div>
-           <div class="g-opt" style="opacity:.5;">QNA 01 <span>›</span></div>
-           <div class="g-opt" style="opacity:.5;">QNA 02 <span>›</span></div>
-           <div class="g-opt sel">QNA 03 <span style="color:#C9A668;font-size:11px;">20 opciones ›</span></div>`,
-    tip: "Revisa la <strong>fecha del comprobante</strong> para identificar la quincena correcta."
-  },
-  {
-    label: "Nómina",
-    instruccion: "Selecciona el <strong>tipo de nómina</strong> al que pertenece el comprobante.",
-    mock: `<div class="g-mock-bar"></div>
-           <div class="g-mock-title" style="margin-bottom:2px;">J. I VICTORIA</div>
-           <div class="g-mock-sub">QNA 03 · Tipo de nómina</div>
-           <div class="g-opt sel">Ord · IMSS-Bienestar <span>›</span></div>
-           <div class="g-opt" style="opacity:.5;">Ord · Jubilados <span>›</span></div>
-           <div class="g-opt" style="opacity:.5;">Extras · IMSS-Bienestar <span>›</span></div>`,
-    tip: "El tipo de nómina aparece en el <strong>encabezado del comprobante PDF</strong>."
-  },
-  {
-    label: "Drive",
-    instruccion: "El sistema abrirá automáticamente la <strong>carpeta de tu unidad en Google Drive</strong>. Arrastra tu archivo PDF hacia esa carpeta.",
-    mock: `<div class="g-mock-bar"></div>
-           <div style="font-size:10px;color:#888;margin-bottom:8px;"><strong>Mi unidad</strong> › 1T › QNA03 › Ord › IMSS-Bienestar</div>
-           <div style="background:#F0E6D8;border-radius:6px;padding:8px 10px;font-size:11px;color:#555;margin-bottom:8px;">📁 Carpeta lista para tu archivo</div>
-           <div style="border:2px dashed #C9A668;border-radius:8px;padding:16px;text-align:center;background:#FFF9F0;">
-             <div style="background:#fff;border:1px solid #ddd;border-radius:6px;padding:5px 10px;font-size:11px;display:inline-block;margin-bottom:8px;">📄 comprobante.pdf</div>
-             <div style="font-size:11px;color:#888;">Suelta aquí tu archivo <strong style="color:#9B1B37;">PDF</strong></div>
-           </div>`,
-    tip: "El archivo debe ser <strong>PDF</strong>. Nómbralo con la quincena y tipo para facilitar su identificación."
-  },
-  {
-    label: "Cerrar",
-    instruccion: "Una vez subido el comprobante, regresa al sistema y presiona <strong>\"← Volver\"</strong> hasta la pantalla principal y cierra sesión.",
-    mock: `<div class="g-mock-bar"></div>
-           <div style="text-align:center;padding:16px 0;">
-             <div style="width:52px;height:52px;background:linear-gradient(135deg,#e8f5e9,#c8e6c9);border-radius:50%;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:22px;border:3px solid #4caf50;">✅</div>
-             <div style="font-size:13px;font-weight:700;color:#2e7d32;margin-bottom:4px;">¡Comprobante subido!</div>
-             <div style="font-size:11px;color:#888;margin-bottom:10px;">Tu archivo fue guardado correctamente.</div>
-             <div style="background:#f44336;color:#fff;border-radius:20px;padding:6px 16px;font-size:11px;font-weight:600;display:inline-block;">🚪 Cerrar sesión</div>
-           </div>`,
-    tip: "Cierra sesión siempre al terminar, especialmente en <strong>equipos compartidos</strong>."
+// ── MARCAR TRIMESTRE COMPLETADO ───────────────────────────────
+let TRIM_A_MARCAR = "";
+
+function abrirConfirm(trimestre) {
+  TRIM_A_MARCAR = trimestre;
+  document.getElementById('confirm-trim-label').textContent = trimestre;
+  document.getElementById('confirm-overlay').classList.add('show');
+}
+
+function cerrarConfirm() {
+  document.getElementById('confirm-overlay').classList.remove('show');
+  TRIM_A_MARCAR = "";
+}
+
+async function confirmarMarcar() {
+  cerrarConfirm();
+  try {
+    const data = await apiFetch({
+      usuario:   USR,
+      password:  PWD,
+      action:    "marcar_completado",
+      trimestre: TRIM_A_MARCAR
+    });
+    if (data.ok) {
+      // Recargar pantalla de trimestres actualizando estatus
+      const data2 = await apiFetch({ usuario: USR, password: PWD });
+      if (data2.ok && data2.step === 1) {
+        renderTrimestres(data2.trimestres);
+      }
+    }
+  } catch(e) {
+    alert('Error al marcar. Intenta de nuevo.');
   }
-];
-
-let guiaCurrent = 0;
-let guiaOrigen  = 's-trim';
-
-function abrirGuia() {
-  guiaOrigen  = document.querySelector('.screen.active').id;
-  guiaCurrent = 0;
-  buildGuia();
-  goTo('s-guia');
-}
-
-function cerrarGuia() {
-  goTo(guiaOrigen);
-}
-
-function buildGuia() {
-  // Tabs
-  const stepsEl = document.getElementById('guia-steps');
-  stepsEl.innerHTML = '';
-  GUIA_PASOS.forEach((p, i) => {
-    const b = document.createElement('button');
-    b.className = 'g-step-btn' + (i === 0 ? ' active' : '');
-    b.textContent = (i+1) + '. ' + p.label;
-    b.onclick = () => { guiaCurrent = i; renderGuia(); };
-    stepsEl.appendChild(b);
-  });
-  // Panels
-  const panelsEl = document.getElementById('guia-panels');
-  panelsEl.innerHTML = '';
-  GUIA_PASOS.forEach((p, i) => {
-    const div = document.createElement('div');
-    div.className = 'g-panel' + (i === 0 ? ' active' : '');
-    div.id = 'g-panel-' + i;
-    div.innerHTML = `
-      <div class="g-instruccion">👉 ${p.instruccion}</div>
-      <div class="g-mock">${p.mock}</div>
-      <div class="g-tip">💡 ${p.tip}</div>`;
-    panelsEl.appendChild(div);
-  });
-  renderGuia();
-}
-
-function renderGuia() {
-  const total = GUIA_PASOS.length;
-  // Tabs
-  document.querySelectorAll('.g-step-btn').forEach((b,i) => b.classList.toggle('active', i === guiaCurrent));
-  // Panels
-  document.querySelectorAll('.g-panel').forEach((p,i) => p.classList.toggle('active', i === guiaCurrent));
-  // Nav
-  document.getElementById('g-prev').disabled = guiaCurrent === 0;
-  document.getElementById('g-counter').textContent = 'Paso ' + (guiaCurrent+1) + ' de ' + total;
-  const nextBtn = document.getElementById('g-next');
-  if (guiaCurrent === total - 1) {
-    nextBtn.textContent = '¡Listo! ✓';
-    nextBtn.classList.add('done');
-  } else {
-    nextBtn.textContent = 'Siguiente →';
-    nextBtn.classList.remove('done');
-  }
-}
-
-function guiaStep(dir) {
-  if (dir === 1 && guiaCurrent === GUIA_PASOS.length - 1) {
-    cerrarGuia();
-    return;
-  }
-  guiaCurrent = Math.max(0, Math.min(GUIA_PASOS.length - 1, guiaCurrent + dir));
-  renderGuia();
 }
 
 document.getElementById('usr').addEventListener('keydown', e => { if(e.key==='Enter') document.getElementById('pwd').focus(); });
