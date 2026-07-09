@@ -81,7 +81,9 @@
 
 
     /* Estatus trimestre */
-    .trim-completado { font-size: 11px; color: #2E7D32; font-weight: 700; display: flex; align-items: center; gap: 4px; margin-top: 4px; }
+    .opt-btn.completado { background: #F1F8E9; border-color: #A5D6A7; color: #2E7D32; }
+    .opt-btn.completado .tag-gold { color: #2E7D32; background: #F1F8E9; }
+    .opt-btn.completado svg { color: #2E7D32; } font-size: 11px; color: #2E7D32; font-weight: 700; display: flex; align-items: center; gap: 4px; margin-top: 4px; }
     .btn-marcar { width: 100%; padding: 8px; margin-top: 6px; font-size: 12px; font-weight: 700; font-family: Arial, sans-serif; color: #2E7D32; background: none; border: 1.5px solid #A5D6A7; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px; transition: background .15s; }
     .btn-marcar:hover { background: #F1F8E9; }
     .btn-marcar.marcado { color: #B4A691; border-color: #E3D9CC; cursor: default; }
@@ -346,6 +348,7 @@ function renderTrimestres(trimestres) {
     const btn = document.createElement('button'); btn.className = 'opt-btn';
     btn.innerHTML = `<span>${t.trimestre}</span><span class="tag tag-gold">${t.count} opciones</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>`;
     btn.onclick = () => selTrimestre(t.trimestre);
+    if (t.completado) btn.classList.add('completado');
     g.appendChild(btn);
 
     // Estatus completado
