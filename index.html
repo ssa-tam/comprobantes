@@ -454,6 +454,7 @@ async function confirmarMarcar() {
       action:    "marcar_completado",
       trimestre: trimAMarcar
     });
+    console.log("DEBUG marcar:", JSON.stringify(data), "USR:", USR, "TRIM:", trimAMarcar);
     if (data.ok) {
       // Formato de fecha en español
       const hoy = new Date();
