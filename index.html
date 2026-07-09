@@ -446,22 +446,38 @@ function cerrarConfirm() {
 
 async function confirmarMarcar() {
   cerrarConfirm();
+  const trimAMarcar = TRIM_A_MARCAR;
   try {
     const data = await apiFetch({
       usuario:   USR,
       password:  PWD,
       action:    "marcar_completado",
-      trimestre: TRIM_A_MARCAR
+      trimestre: trimAMarcar
     });
     if (data.ok) {
-      // Recargar pantalla de trimestres actualizando estatus
-      const data2 = await apiFetch({ usuario: USR, password: PWD });
-      if (data2.ok && data2.step === 1) {
-        renderTrimestres(data2.trimestres);
-      }
+      // Actualizar visualmente sin recargar del servidor
+      // Buscar el grupo del trimestre marcado y actualizarlo
+      const grupos = document.querySelectorAll('#list-trim .group');
+      grupos.forEach(g => {
+        const btn = g.querySelector('.opt-btn');
+        if (btn && btn.querySelector('span') && btn.querySelector('span').textContent === trimAMarcar) {
+          // Cambiar color del botón
+          btn.classList.add('completado');
+          // Reemplazar botón marcar por texto completado
+          const btnMarcar = g.querySelector('.btn-marcar');
+          if (btnMarcar) {
+            const hoy = new Date();
+            const fecha = hoy.toLocaleDateString('es-MX') + ' ' + hoy.toLocaleTimeString('es-MX', {hour:'2-digit',minute:'2-digit'});
+            btnMarcar.outerHTML = '<div class="trim-completado">✅ Completado el ' + fecha + '</div>' +
+              '<button class="btn-marcar marcado" disabled>✓ Trimestre completado</button>';
+          }
+        }
+      });
+    } else {
+      alert('Error al guardar. Intenta de nuevo.');
     }
   } catch(e) {
-    alert('Error al marcar. Intenta de nuevo.');
+    alert('Error de conexión. Intenta de nuevo.');
   }
 }
 
