@@ -81,10 +81,9 @@
 
 
     /* Estatus trimestre */
-    .trim-completado { font-size: 11px; color: #2E7D32; font-weight: 700; display: flex; align-items: center; gap: 4px; margin-top: 4px; }
     .opt-btn.completado { background: #F1F8E9; border-color: #A5D6A7; color: #2E7D32; }
     .opt-btn.completado .tag-gold { color: #2E7D32; background: #F1F8E9; }
-    .opt-btn.completado svg { color: #2E7D32; }
+    .opt-btn.completado svg { color: #2E7D32; } font-size: 11px; color: #2E7D32; font-weight: 700; display: flex; align-items: center; gap: 4px; margin-top: 4px; }
     .btn-marcar { width: 100%; padding: 10px; margin-top: 6px; font-size: 13px; font-weight: 600; font-family: Arial, sans-serif; color: #2E7D32; background: none; border: 1.5px solid #A5D6A7; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: background .15s; }
     .btn-marcar:hover { background: #F1F8E9; }
     .btn-marcar.marcado { color: #B4A691; border-color: #E3D9CC; cursor: default; background: none; }
@@ -96,49 +95,9 @@
     .confirm-btns { display: flex; gap: 10px; }
     .confirm-btns button { flex: 1; padding: 10px; border-radius: 8px; font-size: 13px; font-weight: 700; font-family: Arial, sans-serif; cursor: pointer; border: none; }
     .btn-cancel { background: #F5F0EA; color: #9B1B37; border: 1.5px solid #E3D9CC !important; }
-    .btn-confirm-green { background: linear-gradient(135deg, #2E7D32, #43A047); color: #fff; }
-    /* Botón guía */
-    .btn-guia { width: 100%; padding: 10px; margin-top: 8px; font-size: 13px; font-weight: 600; font-family: Arial, sans-serif; color: #9B1B37; background: none; border: 1.5px solid #E3D9CC; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: background .15s; }
-    .btn-guia:hover { background: #FBF8F4; }
-    /* Guía embebida */
-    #s-guia { padding: 0; }
-    .guia-header { display: flex; align-items: center; gap: 10px; padding: 12px 0 14px; border-bottom: 1.5px solid #F0E6D8; margin-bottom: 14px; }
-    .guia-header button { background: none; border: none; color: #9B1B37; font-size: 18px; cursor: pointer; padding: 0 4px; }
-    .guia-header span { font-size: 14px; font-weight: 700; color: #9B1B37; }
-    .guia-steps { display: flex; gap: 6px; margin-bottom: 16px; overflow-x: auto; padding-bottom: 4px; }
-    .guia-steps::-webkit-scrollbar { height: 3px; }
-    .guia-steps::-webkit-scrollbar-thumb { background: #E3D9CC; border-radius: 2px; }
-    .g-step-btn { flex-shrink: 0; padding: 5px 11px; border-radius: 20px; border: 1.5px solid #E3D9CC; background: #FBF8F4; color: #9B1B37; font-size: 11px; font-weight: 700; cursor: pointer; font-family: Arial, sans-serif; transition: all .15s; }
-    .g-step-btn.active { background: #9B1B37; color: #fff; border-color: #9B1B37; }
-    .g-panel { display: none; }
-    .g-panel.active { display: block; }
-    .g-instruccion { background: #FBF1DE; border-left: 3px solid #C9A668; border-radius: 0 6px 6px 0; padding: 10px 13px; font-size: 12px; color: #6B4A00; line-height: 1.55; margin-bottom: 13px; }
-    .g-instruccion strong { color: #9B1B37; }
-    .g-mock { background: #F5F0EA; border-radius: 8px; padding: 14px; margin-bottom: 11px; }
-    .g-mock-bar { background: #9B1B37; border-radius: 5px 5px 0 0; height: 6px; margin: -14px -14px 12px; }
-    .g-mock-title { text-align: center; font-size: 12px; font-weight: 700; color: #9B1B37; }
-    .g-mock-sub { text-align: center; font-size: 10px; color: #C9A668; font-weight: 600; letter-spacing: .05em; margin-bottom: 10px; }
-    .g-field { background: #fff; border: 1.5px solid #E3D9CC; border-radius: 6px; padding: 7px 10px; font-size: 11px; color: #999; margin-bottom: 7px; }
-    .g-btn-mock { background: linear-gradient(135deg,#9B1B37,#C8313D); color: #fff; border-radius: 6px; padding: 8px; text-align: center; font-size: 12px; font-weight: 700; }
-    .g-opt { background: #fff; border: 1.5px solid #E3D9CC; border-radius: 6px; padding: 9px 11px; font-size: 12px; font-weight: 600; color: #6B1226; margin-bottom: 6px; display: flex; justify-content: space-between; }
-    .g-opt.sel { border-color: #9B1B37; background: #FCEAEA; }
-    .g-tip { background: #fff; border: 1px solid #E3D9CC; border-radius: 6px; padding: 9px 12px; font-size: 11px; color: #888; line-height: 1.5; }
-    .g-tip strong { color: #9B1B37; }
-    .g-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 14px; }
-    .g-nav-btn { padding: 8px 18px; border-radius: 20px; font-size: 12px; font-weight: 700; font-family: Arial, sans-serif; cursor: pointer; border: none; transition: all .2s; }
-    .g-prev { background: none; border: 1.5px solid #9B1B37; color: #9B1B37; }
-    .g-prev:disabled { opacity: .3; cursor: default; }
-    .g-next { background: #9B1B37; color: #fff; }
-    .g-next.done { background: #2E7D32; }
-    .g-counter { font-size: 11px; color: #B4A691; }
+    .btn-confirm { background: linear-gradient(135deg, #2E7D32, #43A047); color: #fff; }
     .footer { text-align: center; margin-top: 1.5rem; font-size: 11px; color: #B4A691; display: flex; align-items: center; justify-content: center; gap: 6px; }
     .footer .dot { width: 3px; height: 3px; border-radius: 50%; background: #C9A668; }
-    /* Banner observaciones */
-    .obs-banner { background: #FBF1DE; border-left: 3px solid #C9A668; border-radius: 0 8px 8px 0; padding: 12px 14px; margin-bottom: 14px; display: none; }
-    .obs-banner.show { display: block; }
-    .obs-banner-title { font-size: 12px; font-weight: 700; color: #8A5A12; margin-bottom: 4px; }
-    .obs-banner-text { font-size: 12px; color: #6B4A00; line-height: 1.5; margin-bottom: 10px; }
-    .obs-banner-btn { background: #9B1B37; color: #fff; border: none; border-radius: 6px; padding: 7px 16px; font-size: 12px; font-weight: 700; font-family: Arial; cursor: pointer; }
   </style>
 </head>
 <body>
@@ -181,15 +140,8 @@
   <div id="s-trim" class="screen">
     <p class="screen-title" id="t-unidad-trim"></p>
     <p class="screen-sub">Selecciona el trimestre</p>
-    <!-- Banner de observaciones admin -->
-    <div class="obs-banner" id="obs-banner">
-      <div class="obs-banner-title">⚠️ Aviso del administrador</div>
-      <div class="obs-banner-text" id="obs-texto"></div>
-      <button class="obs-banner-btn" onclick="marcarVisto()">OK, entendido</button>
-    </div>
     <div class="opt-list" id="list-trim"></div>
     <button class="btn btn-back" onclick="goTo('s-login')">← Volver a iniciar sesión</button>
-    <button class="btn-guia" onclick="abrirGuia()">📖 Ver guía de uso</button>
   </div>
 
   <!-- PANTALLA: QNAs -->
@@ -210,30 +162,15 @@
     <button class="btn btn-back" onclick="goTo('s-qna')">← Volver a quincenas</button>
   </div>
 
-  <!-- Overlay confirmación marcar completado -->
+  <!-- Overlay confirmación -->
   <div class="confirm-overlay" id="confirm-overlay">
     <div class="confirm-box">
       <h3>¿Confirmar cierre?</h3>
       <p>Estás marcando el <strong id="confirm-trim-label"></strong> como <strong>Completado</strong>.<br>Solo el administrador podrá revertir esta acción.</p>
       <div class="confirm-btns">
         <button class="btn-cancel" onclick="cerrarConfirm()">Cancelar</button>
-        <button class="btn-confirm-green" onclick="confirmarMarcar()">✓ Sí, completado</button>
+        <button class="btn-confirm" onclick="confirmarMarcar()">✓ Sí, completado</button>
       </div>
-    </div>
-  </div>
-
-  <!-- Pantalla guía embebida -->
-  <div id="s-guia" class="screen">
-    <div class="guia-header">
-      <button onclick="cerrarGuia()">←</button>
-      <span>Guía de uso del sistema</span>
-    </div>
-    <div class="guia-steps" id="guia-steps"></div>
-    <div id="guia-panels"></div>
-    <div class="g-nav">
-      <button class="g-nav-btn g-prev" id="g-prev" onclick="guiaStep(-1)" disabled>← Anterior</button>
-      <span class="g-counter" id="g-counter">Paso 1 de 6</span>
-      <button class="g-nav-btn g-next" id="g-next" onclick="guiaStep(1)">Siguiente →</button>
     </div>
   </div>
 
@@ -403,53 +340,37 @@ function handleStep(data) {
 // ── Render Trimestres ────────────────────────────────────────
 function renderTrimestres(trimestres) {
   document.getElementById('t-unidad-trim').textContent = UNIDAD;
-
-  // Banner de observaciones admin
-  const obsArr = trimestres.filter(t => t.obs && !t.visto);
-  const banner = document.getElementById('obs-banner');
-  if (obsArr.length > 0) {
-    const textos = obsArr.map(t => '• ' + t.trimestre + ': ' + t.obs).join('\n');
-    document.getElementById('obs-texto').innerText = textos;
-    banner.classList.add('show');
-    banner._pendientes = obsArr.map(t => t.trimestre);
-  } else {
-    banner.classList.remove('show');
-    banner._pendientes = [];
-  }
-
   const list = document.getElementById('list-trim');
   list.innerHTML = '';
-  trimestres.forEach(t => {
-    const g = document.createElement('div'); g.className = 'group';
-    const lbl = document.createElement('div'); lbl.className = 'group-label'; lbl.textContent = 'Periodo'; g.appendChild(lbl);
-    const btn = document.createElement('button'); btn.className = 'opt-btn' + (t.completado ? ' completado' : '');
-    btn.innerHTML = `<span>${t.trimestre}</span><span class="tag tag-gold">${t.count} opciones</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>`;
-    btn.onclick = () => selTrimestre(t.trimestre);
-    g.appendChild(btn);
-    if (t.completado) {
-      const comp = document.createElement('div'); comp.className = 'trim-completado';
-      comp.innerHTML = '✅ Completado el ' + t.fecha;
-      g.appendChild(comp);
-      const btnM = document.createElement('button'); btnM.className = 'btn-marcar marcado'; btnM.disabled = true;
-      btnM.textContent = '✓ Trimestre completado'; g.appendChild(btnM);
-    } else {
-      const btnM = document.createElement('button'); btnM.className = 'btn-marcar';
-      btnM.innerHTML = '☑ Marcar trimestre como completado';
-      btnM.setAttribute('data-trimestre', t.trimestre);
-      btnM.onclick = function(e) { e.stopPropagation(); abrirConfirm(this.getAttribute('data-trimestre')); };
-      g.appendChild(btnM);
-    }
-    list.appendChild(g);
-  });
-  goTo('s-trim');
-}
   trimestres.forEach(t => {
     const g = document.createElement('div'); g.className = 'group';
     const lbl = document.createElement('div'); lbl.className = 'group-label'; lbl.textContent = 'Periodo'; g.appendChild(lbl);
     const btn = document.createElement('button'); btn.className = 'opt-btn';
     btn.innerHTML = `<span>${t.trimestre}</span><span class="tag tag-gold">${t.count} opciones</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>`;
     btn.onclick = () => selTrimestre(t.trimestre);
-    g.appendChild(btn); list.appendChild(g);
+    if (t.completado) btn.classList.add('completado');
+    g.appendChild(btn);
+
+    // Estatus completado
+    if (t.completado) {
+      const comp = document.createElement('div');
+      comp.className = 'trim-completado';
+      comp.innerHTML = '✅ Completado el ' + t.fecha;
+      g.appendChild(comp);
+      const btnM = document.createElement('button');
+      btnM.className = 'btn-marcar marcado';
+      btnM.textContent = '✓ Trimestre completado';
+      btnM.disabled = true;
+      g.appendChild(btnM);
+    } else {
+      const btnM = document.createElement('button');
+      btnM.className = 'btn-marcar';
+      btnM.innerHTML = '☑ Marcar trimestre como completado';
+      btnM.onclick = (e) => { e.stopPropagation(); abrirConfirm(t.trimestre); };
+      g.appendChild(btnM);
+    }
+
+    list.appendChild(g);
   });
   goTo('s-trim');
 }
@@ -524,14 +445,24 @@ function cerrarConfirm() {
 }
 
 async function confirmarMarcar() {
-  const trimAMarcar = TRIM_A_MARCAR;
+  const trimAMarcar = TRIM_A_MARCAR; // guardar ANTES de cerrar
   cerrarConfirm();
+  console.log("DEBUG marcar:", "USR:", USR, "TRIM:", trimAMarcar);
   try {
-    const data = await apiFetch({ usuario: USR, password: PWD, action: "marcar_completado", trimestre: trimAMarcar });
+    const data = await apiFetch({
+      usuario:   USR,
+      password:  PWD,
+      action:    "marcar_completado",
+      trimestre: trimAMarcar
+    });
+    console.log("DEBUG resp:", JSON.stringify(data));
     if (data.ok) {
+      // Formato de fecha en español
       const hoy = new Date();
-      const fecha = hoy.toLocaleDateString('es-MX', {day:'2-digit',month:'2-digit',year:'numeric'})
-                  + ' ' + hoy.toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit',hour12:false});
+      const fecha = hoy.toLocaleDateString('es-MX', {day:'2-digit', month:'2-digit', year:'numeric'}) 
+                  + ' ' + hoy.toLocaleTimeString('es-MX', {hour:'2-digit', minute:'2-digit', hour12:false});
+
+      // Actualizar visualmente el trimestre marcado
       const grupos = document.querySelectorAll('#list-trim .group');
       grupos.forEach(g => {
         const spans = g.querySelectorAll('.opt-btn span');
@@ -552,106 +483,16 @@ async function confirmarMarcar() {
           }
         }
       });
-    } else { alert('Error al guardar: ' + (data.msg || 'intenta de nuevo')); }
-  } catch(e) { alert('Error de conexión.'); }
-}
-
-// ── GUÍA EMBEBIDA ─────────────────────────────────────────────
-const GUIA_PASOS = [
-  { label:"Login", instruccion:"Ingresa tu <strong>usuario</strong> (ej. HG_VICTORIA) y tu <strong>contraseña</strong>. Presiona <strong>\"Ingresar\"</strong>.",
-    mock:`<div class="g-mock-bar"></div><div class="g-mock-title">Servicios de Salud de Tamaulipas</div><div class="g-mock-sub">COMPROBANTES DE PAGOS DIGITALES</div><div class="g-field" style="color:#999;font-style:italic;">Ej. HG_VICTORIA</div><div class="g-field">••••••••</div><div class="g-btn-mock">Ingresar</div>`,
-    tip:"Tu usuario es el <strong>código de tu unidad</strong> asignado por Recursos Humanos." },
-  { label:"Trimestre", instruccion:"Selecciona el <strong>trimestre vigente</strong> indicado por tu jefatura.",
-    mock:`<div class="g-mock-bar"></div><div class="g-mock-title" style="margin-bottom:4px;">J. I VICTORIA</div><div class="g-mock-sub">Selecciona el trimestre</div><div class="g-opt sel">1° Trimestre <span>›</span></div><div class="g-opt" style="opacity:.5;">2° Trimestre <span>›</span></div>`,
-    tip:"Solo estarán disponibles los trimestres del <strong>periodo activo</strong>." },
-  { label:"Quincena", instruccion:"Elige la <strong>quincena (QNA)</strong> que corresponde al comprobante.",
-    mock:`<div class="g-mock-bar"></div><div class="g-mock-title" style="margin-bottom:2px;">J. I VICTORIA</div><div class="g-mock-sub">1° Trimestre · Quincena</div><div class="g-opt" style="opacity:.5;">QNA 01 <span>›</span></div><div class="g-opt sel">QNA 03 <span>›</span></div>`,
-    tip:"Revisa la <strong>fecha del comprobante</strong> para identificar la quincena correcta." },
-  { label:"Nómina", instruccion:"Selecciona el <strong>tipo de nómina</strong> al que pertenece el comprobante.",
-    mock:`<div class="g-mock-bar"></div><div class="g-mock-title" style="margin-bottom:2px;">J. I VICTORIA</div><div class="g-mock-sub">QNA 03 · Tipo de nómina</div><div class="g-opt sel">Ord · IMSS-Bienestar <span>›</span></div><div class="g-opt" style="opacity:.5;">Extras · Jubilados <span>›</span></div>`,
-    tip:"El tipo de nómina aparece en el <strong>encabezado del comprobante PDF</strong>." },
-  { label:"Drive", instruccion:"El sistema abrirá tu <strong>carpeta en Google Drive</strong>. Arrastra tu archivo PDF.",
-    mock:`<div class="g-mock-bar"></div><div style="font-size:10px;color:#888;margin-bottom:8px;">Mi unidad › 1T › QNA03 › Ord › IMSS-Bienestar</div><div style="border:2px dashed #C9A668;border-radius:8px;padding:16px;text-align:center;background:#FFF9F0;"><div style="font-size:11px;color:#888;">Suelta aquí tu archivo <strong style="color:#9B1B37;">PDF</strong></div></div>`,
-    tip:"El archivo debe ser <strong>PDF</strong>." },
-  { label:"Cerrar", instruccion:"Una vez subido, regresa y presiona <strong>\"← Volver\"</strong> hasta la pantalla principal.",
-    mock:`<div class="g-mock-bar"></div><div style="text-align:center;padding:16px 0;"><div style="width:52px;height:52px;background:linear-gradient(135deg,#e8f5e9,#c8e6c9);border-radius:50%;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:22px;border:3px solid #4caf50;">✅</div><div style="font-size:13px;font-weight:700;color:#2e7d32;">¡Comprobante subido!</div></div>`,
-    tip:"Cierra sesión siempre al terminar, especialmente en <strong>equipos compartidos</strong>." }
-];
-
-let guiaCurrent = 0, guiaOrigen = 's-trim';
-
-function abrirGuia() {
-  guiaOrigen = document.querySelector('.screen.active').id;
-  guiaCurrent = 0;
-  buildGuia();
-  goTo('s-guia');
-}
-function cerrarGuia() { goTo(guiaOrigen); }
-
-function buildGuia() {
-  const stepsEl = document.getElementById('guia-steps');
-  stepsEl.innerHTML = '';
-  GUIA_PASOS.forEach((p, i) => {
-    const b = document.createElement('button');
-    b.className = 'g-step-btn' + (i===0?' active':'');
-    b.textContent = (i+1) + '. ' + p.label;
-    b.onclick = () => { guiaCurrent = i; renderGuia(); };
-    stepsEl.appendChild(b);
-  });
-  const panelsEl = document.getElementById('guia-panels');
-  panelsEl.innerHTML = '';
-  GUIA_PASOS.forEach((p, i) => {
-    const div = document.createElement('div');
-    div.className = 'g-panel' + (i===0?' active':'');
-    div.id = 'g-panel-' + i;
-    div.innerHTML = `<div class="g-instruccion">👉 ${p.instruccion}</div><div class="g-mock">${p.mock}</div><div class="g-tip">💡 ${p.tip}</div>`;
-    panelsEl.appendChild(div);
-  });
-  renderGuia();
-}
-
-function renderGuia() {
-  const total = GUIA_PASOS.length;
-  document.querySelectorAll('.g-step-btn').forEach((b,i) => b.classList.toggle('active', i===guiaCurrent));
-  document.querySelectorAll('.g-panel').forEach((p,i) => p.classList.toggle('active', i===guiaCurrent));
-  document.getElementById('g-prev').disabled = guiaCurrent === 0;
-  document.getElementById('g-counter').textContent = 'Paso ' + (guiaCurrent+1) + ' de ' + total;
-  const nextBtn = document.getElementById('g-next');
-  if (guiaCurrent === total-1) { nextBtn.textContent = '¡Listo! ✓'; nextBtn.classList.add('done'); }
-  else { nextBtn.textContent = 'Siguiente →'; nextBtn.classList.remove('done'); }
-}
-
-function guiaStep(dir) {
-  if (dir===1 && guiaCurrent===GUIA_PASOS.length-1) { cerrarGuia(); return; }
-  guiaCurrent = Math.max(0, Math.min(GUIA_PASOS.length-1, guiaCurrent+dir));
-  renderGuia();
-}
-
-// ── Marcar observaciones como vistas ────────────────────────
-async function marcarVisto() {
-  const banner = document.getElementById('obs-banner');
-  const pendientes = banner._pendientes || [];
-  banner.classList.remove('show');
-  for (const trim of pendientes) {
-    try { await apiFetch({ usuario: USR, password: PWD, action: 'marcar_visto', target: USR, trimestre: trim }); }
-    catch(e) { /* silencioso */ }
+    } else {
+      alert('Error al guardar: ' + (data.msg || 'intenta de nuevo'));
+    }
+  } catch(e) {
+    alert('Error de conexión. Intenta de nuevo.');
   }
 }
 
 document.getElementById('usr').addEventListener('keydown', e => { if(e.key==='Enter') document.getElementById('pwd').focus(); });
 document.getElementById('pwd').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
-
-// ── Marcar observaciones como vistas ────────────────────────
-async function marcarVisto() {
-  const banner = document.getElementById('obs-banner');
-  const pendientes = banner._pendientes || [];
-  banner.classList.remove('show');
-  for (const trim of pendientes) {
-    try {
-      await apiFetch({ usuario: USR, password: PWD, action: 'marcar_visto', target: USR, trimestre: trim });
-    } catch(e) { /* silencioso */ }
-  }
-}
 </script>
 </body>
 </html>
