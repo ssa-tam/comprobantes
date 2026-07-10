@@ -79,25 +79,14 @@
     .opt-btn .tag-gold { color: #C9A668; background: #F5F0EA; }
     .opt-btn svg { width: 16px; height: 16px; flex-shrink: 0; color: #C9A668; }
 
-
-    /* Estatus trimestre */
-    .opt-btn.completado { background: #F1F8E9; border-color: #A5D6A7; color: #2E7D32; }
-    .opt-btn.completado .tag-gold { color: #2E7D32; background: #F1F8E9; }
-    .opt-btn.completado svg { color: #2E7D32; } font-size: 11px; color: #2E7D32; font-weight: 700; display: flex; align-items: center; gap: 4px; margin-top: 4px; }
-    .btn-marcar { width: 100%; padding: 10px; margin-top: 6px; font-size: 13px; font-weight: 600; font-family: Arial, sans-serif; color: #2E7D32; background: none; border: 1.5px solid #A5D6A7; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: background .15s; }
-    .btn-marcar:hover { background: #F1F8E9; }
-    .btn-marcar.marcado { color: #B4A691; border-color: #E3D9CC; cursor: default; background: none; }
-    .confirm-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200; align-items: center; justify-content: center; }
-    .confirm-overlay.show { display: flex; }
-    .confirm-box { background: #fff; border-radius: 14px; padding: 24px 20px; width: 88%; max-width: 340px; text-align: center; box-shadow: 0 8px 32px rgba(0,0,0,0.2); }
-    .confirm-box h3 { font-size: 15px; font-weight: 700; color: #9B1B37; margin-bottom: 8px; }
-    .confirm-box p { font-size: 13px; color: #7A6C5D; margin-bottom: 18px; line-height: 1.5; }
-    .confirm-btns { display: flex; gap: 10px; }
-    .confirm-btns button { flex: 1; padding: 10px; border-radius: 8px; font-size: 13px; font-weight: 700; font-family: Arial, sans-serif; cursor: pointer; border: none; }
-    .btn-cancel { background: #F5F0EA; color: #9B1B37; border: 1.5px solid #E3D9CC !important; }
-    .btn-confirm { background: linear-gradient(135deg, #2E7D32, #43A047); color: #fff; }
     .footer { text-align: center; margin-top: 1.5rem; font-size: 11px; color: #B4A691; display: flex; align-items: center; justify-content: center; gap: 6px; }
     .footer .dot { width: 3px; height: 3px; border-radius: 50%; background: #C9A668; }
+    /* Banner observaciones */
+    .obs-banner { background: #FBF1DE; border-left: 3px solid #C9A668; border-radius: 0 8px 8px 0; padding: 12px 14px; margin-bottom: 14px; display: none; }
+    .obs-banner.show { display: block; }
+    .obs-banner-title { font-size: 12px; font-weight: 700; color: #8A5A12; margin-bottom: 4px; }
+    .obs-banner-text { font-size: 12px; color: #6B4A00; line-height: 1.5; margin-bottom: 10px; }
+    .obs-banner-btn { background: #9B1B37; color: #fff; border: none; border-radius: 6px; padding: 7px 16px; font-size: 12px; font-weight: 700; font-family: Arial; cursor: pointer; }
   </style>
 </head>
 <body>
@@ -140,6 +129,12 @@
   <div id="s-trim" class="screen">
     <p class="screen-title" id="t-unidad-trim"></p>
     <p class="screen-sub">Selecciona el trimestre</p>
+    <!-- Banner de observaciones admin -->
+    <div class="obs-banner" id="obs-banner">
+      <div class="obs-banner-title">⚠️ Aviso del administrador</div>
+      <div class="obs-banner-text" id="obs-texto"></div>
+      <button class="obs-banner-btn" onclick="marcarVisto()">OK, entendido</button>
+    </div>
     <div class="opt-list" id="list-trim"></div>
     <button class="btn btn-back" onclick="goTo('s-login')">← Volver a iniciar sesión</button>
   </div>
@@ -160,18 +155,6 @@
     <p class="screen-sub">Selecciona la nómina y tipo a subir</p>
     <div class="opt-list" id="list-tipos"></div>
     <button class="btn btn-back" onclick="goTo('s-qna')">← Volver a quincenas</button>
-  </div>
-
-  <!-- Overlay confirmación -->
-  <div class="confirm-overlay" id="confirm-overlay">
-    <div class="confirm-box">
-      <h3>¿Confirmar cierre?</h3>
-      <p>Estás marcando el <strong id="confirm-trim-label"></strong> como <strong>Completado</strong>.<br>Solo el administrador podrá revertir esta acción.</p>
-      <div class="confirm-btns">
-        <button class="btn-cancel" onclick="cerrarConfirm()">Cancelar</button>
-        <button class="btn-confirm" onclick="confirmarMarcar()">✓ Sí, completado</button>
-      </div>
-    </div>
   </div>
 
   <div class="footer"><span>Secretaría de Salud de Tamaulipas</span><span class="dot"></span><span>2026</span></div>
@@ -340,6 +323,21 @@ function handleStep(data) {
 // ── Render Trimestres ────────────────────────────────────────
 function renderTrimestres(trimestres) {
   document.getElementById('t-unidad-trim').textContent = UNIDAD;
+
+  // Mostrar banner si hay observaciones pendientes de ver
+  const obsArr = trimestres.filter(t => t.obs && !t.visto);
+  const banner = document.getElementById('obs-banner');
+  if (obsArr.length > 0) {
+    const textos = obsArr.map(t => '• ' + t.trimestre + ': ' + t.obs).join('\n');
+    document.getElementById('obs-texto').innerText = textos;
+    banner.classList.add('show');
+    // Guardar qué trimestres tiene pendientes de ver
+    banner._pendientes = obsArr.map(t => t.trimestre);
+  } else {
+    banner.classList.remove('show');
+    banner._pendientes = [];
+  }
+
   const list = document.getElementById('list-trim');
   list.innerHTML = '';
   trimestres.forEach(t => {
@@ -348,30 +346,7 @@ function renderTrimestres(trimestres) {
     const btn = document.createElement('button'); btn.className = 'opt-btn';
     btn.innerHTML = `<span>${t.trimestre}</span><span class="tag tag-gold">${t.count} opciones</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>`;
     btn.onclick = () => selTrimestre(t.trimestre);
-    if (t.completado) btn.classList.add('completado');
-    g.appendChild(btn);
-
-    // Estatus completado
-    if (t.completado) {
-      const comp = document.createElement('div');
-      comp.className = 'trim-completado';
-      comp.innerHTML = '✅ Completado el ' + t.fecha;
-      g.appendChild(comp);
-      const btnM = document.createElement('button');
-      btnM.className = 'btn-marcar marcado';
-      btnM.textContent = '✓ Trimestre completado';
-      btnM.disabled = true;
-      g.appendChild(btnM);
-    } else {
-      const btnM = document.createElement('button');
-      btnM.className = 'btn-marcar';
-      btnM.innerHTML = '☑ Marcar trimestre como completado';
-      btnM.setAttribute('data-trimestre', t.trimestre);
-      btnM.onclick = function(e) { e.stopPropagation(); abrirConfirm(this.getAttribute('data-trimestre')); };
-      g.appendChild(btnM);
-    }
-
-    list.appendChild(g);
+    g.appendChild(btn); list.appendChild(g);
   });
   goTo('s-trim');
 }
@@ -430,70 +405,20 @@ function renderTipos(opciones) {
 }
 
 // ── Enter key ────────────────────────────────────────────────
-
-// ── MARCAR TRIMESTRE COMPLETADO ───────────────────────────────
-let TRIM_A_MARCAR = "";
-
-function abrirConfirm(trimestre) {
-  TRIM_A_MARCAR = trimestre;
-  document.getElementById('confirm-trim-label').textContent = trimestre;
-  document.getElementById('confirm-overlay').classList.add('show');
-}
-
-function cerrarConfirm() {
-  document.getElementById('confirm-overlay').classList.remove('show');
-  TRIM_A_MARCAR = "";
-}
-
-async function confirmarMarcar() {
-  const trimAMarcar = TRIM_A_MARCAR; // guardar ANTES de cerrar
-  cerrarConfirm();
-  console.log("DEBUG marcar:", "USR:", USR, "TRIM:", trimAMarcar);
-  try {
-    const data = await apiFetch({
-      usuario:   USR,
-      password:  PWD,
-      action:    "marcar_completado",
-      trimestre: trimAMarcar
-    });
-    console.log("DEBUG resp:", JSON.stringify(data));
-    if (data.ok) {
-      // Formato de fecha en español
-      const hoy = new Date();
-      const fecha = hoy.toLocaleDateString('es-MX', {day:'2-digit', month:'2-digit', year:'numeric'}) 
-                  + ' ' + hoy.toLocaleTimeString('es-MX', {hour:'2-digit', minute:'2-digit', hour12:false});
-
-      // Actualizar visualmente el trimestre marcado
-      const grupos = document.querySelectorAll('#list-trim .group');
-      grupos.forEach(g => {
-        const spans = g.querySelectorAll('.opt-btn span');
-        if (spans.length > 0 && spans[0].textContent === trimAMarcar) {
-          const optBtn = g.querySelector('.opt-btn');
-          if (optBtn) optBtn.classList.add('completado');
-          const btnMarcar = g.querySelector('.btn-marcar');
-          if (btnMarcar) {
-            const comp = document.createElement('div');
-            comp.className = 'trim-completado';
-            comp.innerHTML = '✅ Completado el ' + fecha;
-            const marcadoBtn = document.createElement('button');
-            marcadoBtn.className = 'btn-marcar marcado';
-            marcadoBtn.disabled = true;
-            marcadoBtn.textContent = '✓ Trimestre completado';
-            btnMarcar.replaceWith(comp);
-            g.appendChild(marcadoBtn);
-          }
-        }
-      });
-    } else {
-      alert('Error al guardar: ' + (data.msg || 'intenta de nuevo'));
-    }
-  } catch(e) {
-    alert('Error de conexión. Intenta de nuevo.');
-  }
-}
-
 document.getElementById('usr').addEventListener('keydown', e => { if(e.key==='Enter') document.getElementById('pwd').focus(); });
 document.getElementById('pwd').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+
+// ── Marcar observaciones como vistas ────────────────────────
+async function marcarVisto() {
+  const banner = document.getElementById('obs-banner');
+  const pendientes = banner._pendientes || [];
+  banner.classList.remove('show');
+  for (const trim of pendientes) {
+    try {
+      await apiFetch({ usuario: USR, password: PWD, action: 'marcar_visto', target: USR, trimestre: trim });
+    } catch(e) { /* silencioso */ }
+  }
+}
 </script>
 </body>
 </html>
