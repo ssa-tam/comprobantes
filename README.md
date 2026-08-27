@@ -28,16 +28,6 @@ comprobantes-digitales-ssa/
     └── notas.md
 ```
 
-## Frontends (HTML servidos en este repo / Netlify)
-
-- `index.html` — frontend EN PRODUCCIÓN que usan las 41 unidades hoy (apunta al Web App principal que mezcla todos los trimestres).
-- `index_2do.html` — copia archivada apuntando al deployment usado durante el 2° trimestre.
-- `index_3er.html` — **nuevo**: mismo frontend, apuntando ya al Web App independiente del 3er trimestre:
-  `https://script.google.com/macros/s/AKfycbzsj0wcVMnGxiL4jsdoHdLsiPTSOHDenGdmhloKIy-LY3mJHgVXTp9Q6q07OaS5ICx0Rw/exec`
-  Cuando quieras que las unidades usen el sistema de Q3 en vez del mezclado, sube este archivo como `index.html` en Netlify (o cambia el dominio a apuntar aquí).
-- `admin.html` — panel de administrador anterior (simple). El nuevo panel (`admin-dashboard/AdminPanel.html`) vive como Apps Script propio, ver abajo.
-- `guia-comprobantes.html` — guía para las unidades, sin cambios.
-
 ## Qué cambia respecto al sistema actual
 
 **Antes:** un solo Google Sheet ("SST_Todos_Trimestres") con TODAS las quincenas
