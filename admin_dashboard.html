@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SST Admin Dashboard</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f1e8;
+            color: #333;
+            padding: 20px;
+        }
+        .container { max-width: 900px; margin: 0 auto; }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .header h1 { color: #8B3A3A; margin-bottom: 5px; }
+        .header p { color: #999; font-size: 14px; }
+
+        .login-section {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            max-width: 400px;
+            margin: 0 auto 40px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #8B3A3A;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-primary {
+            background: #8B3A3A;
+            color: white;
+            width: 100%;
+        }
+        .btn-primary:hover { background: #6B2A2A; }
+        .btn-secondary { background: #e0e0e0; color: #333; }
+        .btn-secondary:hover { background: #ccc; }
+        .btn-success { background: #4caf50; color: white; }
+        .btn-success:hover { background: #45a049; }
+        .btn-danger { background: #f44336; color: white; }
+        .btn-danger:hover { background: #da190b; }
+        .btn-sm { padding: 6px 12px; font-size: 12px; }
+
+        .dashboard { display: none; }
+        .dashboard.active { display: block; }
+
+        .section {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .section h2 {
+            color: #8B3A3A;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        th {
+            background: #f9f9f9;
+            font-weight: 600;
+            color: #8B3A3A;
+        }
+        tr:hover { background: #fafafa; }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .status-activo { background: #c8e6c9; color: #2e7d32; }
+        .status-inactivo { background: #ffcccc; color: #c62828; }
+
+        .actions {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+        .alert-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .alert-error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+
+        .toolbar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #999;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔐 Panel Administrador SST</h1>
+            <p>Gestión de accesos • Comprobantes SSA Tamaulipas</p>
+        </div>
+
+        <!-- LOGIN SECTION -->
+        <div id="loginSection" class="login-section">
+            <h2 style="color: #8B3A3A; margin-bottom: 20px;">Ingresar como Administrador</h2>
+            <div class="form-group">
+                <label for="adminUser">Usuario:</label>
+                <input type="text" id="adminUser" placeholder="ADMIN_SST" value="ADMIN_SST">
+            </div>
+            <div class="form-group">
+                <label for="adminPass">Contraseña:</label>
+                <input type="password" id="adminPass" placeholder="••••••••" value="Admin2024*">
+            </div>
+            <button class="btn btn-primary" onclick="adminLogin()">Ingresar</button>
+        </div>
+
+        <!-- DASHBOARD SECTION -->
+        <div id="dashboardSection" class="dashboard">
+            <div style="text-align: right; margin-bottom: 20px;">
+                <button class="btn btn-secondary btn-sm" onclick="adminLogout()">Cerrar sesión</button>
+            </div>
+
+            <div id="alertContainer"></div>
+
+            <!-- UNIDADES SECTION -->
+            <div class="section">
+                <h2>📋 Gestión de Unidades</h2>
+                <div class="toolbar">
+                    <button class="btn btn-success btn-sm" onclick="activarTodasUnidades()">✓ Activar todas</button>
+                    <button class="btn btn-danger btn-sm" onclick="desactivarTodasUnidades()">✗ Desactivar todas</button>
+                    <button class="btn btn-primary btn-sm" onclick="cargarUnidades()">🔄 Actualizar</button>
+                </div>
+                <table id="unidadesTable">
+                    <thead>
+                        <tr>
+                            <th>Unidad</th>
+                            <th>Usuario</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="unidadesList">
+                        <tr><td colspan="4" style="text-align: center; color: #999;">Cargando...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        SST Admin Dashboard v2.0 • Backend: Google Apps Script
+    </div>
+
+    <script>
+        const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbwq2E124BmuDXUTKYZJNxGUADzQ3Nx5W8o7PoscMUkgP-8_2Z8aUuuB8AVMMlwVGGRSqA/exec';
+        let adminLogged = false;
+        let allUnidades = [];
+
+        function showAlert(msg, type = 'info') {
+            const alertDiv = document.getElementById('alertContainer');
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type}`;
+            alert.textContent = msg;
+            alertDiv.innerHTML = '';
+            alertDiv.appendChild(alert);
+            setTimeout(() => alert.remove(), 5000);
+        }
+
+        function adminLogin() {
+            const user = document.getElementById('adminUser').value;
+            const pass = document.getElementById('adminPass').value;
+
+            if (!user || !pass) {
+                showAlert('Ingrese usuario y contraseña', 'error');
+                return;
+            }
+
+            adminLogged = true;
+            document.getElementById('loginSection').style.display = 'none';
+            document.getElementById('dashboardSection').classList.add('active');
+
+            cargarUnidades();
+        }
+
+        function adminLogout() {
+            adminLogged = false;
+            document.getElementById('dashboardSection').classList.remove('active');
+            document.getElementById('loginSection').style.display = 'block';
+            document.getElementById('alertContainer').innerHTML = '';
+        }
+
+        function makeRequest(action, params) {
+            const user = document.getElementById('adminUser').value;
+            const pass = document.getElementById('adminPass').value;
+            let url = `${BACKEND_URL}?usuario=${encodeURIComponent(user)}&password=${encodeURIComponent(pass)}&action=${action}`;
+
+            Object.keys(params).forEach(key => {
+                url += `&${key}=${encodeURIComponent(params[key])}`;
+            });
+
+            return fetch(url)
+                .then(r => r.json())
+                .catch(e => {
+                    showAlert(`Error de conexión: ${e.message}`, 'error');
+                    return { ok: false };
+                });
+        }
+
+        function cargarUnidades() {
+            makeRequest('get_unidades', {}).then(data => {
+                if (data.ok && data.unidades) {
+                    allUnidades = data.unidades;
+                    renderUnidades();
+                } else {
+                    showAlert('Error al cargar unidades', 'error');
+                }
+            });
+        }
+
+        function renderUnidades() {
+            const tbody = document.getElementById('unidadesList');
+            tbody.innerHTML = allUnidades.map(u => `
+                <tr>
+                    <td><strong>${u.nombre || '—'}</strong></td>
+                    <td>${u.usuario}</td>
+                    <td>
+                        <span class="status-badge status-${u.estado === 'Activo' ? 'activo' : 'inactivo'}">
+                            ${u.estado === 'Activo' ? '✓ Activo' : '✗ Inactivo'}
+                        </span>
+                    </td>
+                    <td class="actions">
+                        ${u.estado !== 'Activo' ?
+                            `<button class="btn btn-success btn-sm" onclick="cambiarEstado('${u.usuario}', 'Activo')">Activar</button>` :
+                            `<button class="btn btn-danger btn-sm" onclick="cambiarEstado('${u.usuario}', 'Inactivo')">Desactivar</button>`
+                        }
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function cambiarEstado(usuario, nuevoEstado) {
+            makeRequest('set_estado', { target: usuario, estado: nuevoEstado }).then(data => {
+                if (data.ok) {
+                    showAlert(`${usuario} ${nuevoEstado === 'Activo' ? 'activado ✓' : 'desactivado ✗'}`, 'success');
+                    cargarUnidades();
+                } else {
+                    showAlert('Error al cambiar estado', 'error');
+                }
+            });
+        }
+
+        function activarTodasUnidades() {
+            if (!confirm('¿Activar TODAS las unidades?')) return;
+            makeRequest('set_todas', { estado: 'Activo' }).then(data => {
+                if (data.ok) {
+                    showAlert('✓ Todas las unidades han sido activadas', 'success');
+                    cargarUnidades();
+                } else {
+                    showAlert('Error al activar todas', 'error');
+                }
+            });
+        }
+
+        function desactivarTodasUnidades() {
+            if (!confirm('¿Desactivar TODAS las unidades?')) return;
+            makeRequest('set_todas', { estado: 'Inactivo' }).then(data => {
+                if (data.ok) {
+                    showAlert('✗ Todas las unidades han sido desactivadas', 'success');
+                    cargarUnidades();
+                } else {
+                    showAlert('Error al desactivar todas', 'error');
+                }
+            });
+        }
+
+        // Cargar unidades al abrir
+        document.addEventListener('DOMContentLoaded', function() {
+            // El login se hace manualmente
+        });
+    </script>
+</body>
+</html>
