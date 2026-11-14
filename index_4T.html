@@ -699,7 +699,7 @@ async function abrirSubida(op, nomLabel) {
 
 function renderPrefijos(prefijos) {
   const wrap = document.getElementById('sub-prefijos'); wrap.innerHTML = '';
-  const AYUDA = { ORD: 'Ordinaria', RETRO: 'Retroactivo', EXTRA: 'Extraordinaria', APORT: 'Aportación', AGUINALDO: 'Aguinaldo', REYES: 'Reyes', BONOMADRES: 'Bono Madres', BONOPADRES: 'Bono Padres' };
+  const AYUDA = { ORD: 'Ordinaria', RETRO: 'Retroactivo', EXTRA: 'Extraordinaria', APORT: 'Aportación', AGUINALDO: 'Aguinaldo' };
   prefijos.forEach((p, i) => {
     const b = document.createElement('button'); b.className = 'chip'; b.type = 'button';
     b.textContent = p + (AYUDA[p] ? ' · ' + AYUDA[p] : '');
