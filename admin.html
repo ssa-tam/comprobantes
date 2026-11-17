@@ -99,6 +99,7 @@
       <span class="badge-admin">ADMINISTRADOR</span>
     </div>
 
+    <div style="margin:-6px 0 10px"><a href="panel.html" style="font-size:12px;color:#7A6C5D;text-decoration:none">← Volver al panel</a></div>
     <div class="panel-header">
       <h2 id="panel-titulo">Cargando…</h2>
       <div class="global-btns">
@@ -117,7 +118,7 @@
 </div>
 
 <script>
-const URL_AS = "https://script.google.com/macros/s/AKfycbyQP42MVFS1hgntvxfYTKC6UjpJfmYNygkBZLvwn8DmMCAJsKux-YEddtqUE45Tu1nL/exec";
+const URL_AS = "https://script.google.com/macros/s/AKfycbx80ftpelhiD9hxSTsC4SUhIkN7jPBskWe0O_gty6umYTjY6YEK5HxZDi61BySs_hJ0/exec";
 let ADM_USR = "", ADM_PWD = "";
 let ESTATUS = [];
 let UNIDADES = [];
@@ -188,6 +189,14 @@ async function doLogin() {
     document.getElementById('btn-txt').textContent = 'Ingresar al panel';
   }
 }
+
+// ── Entrada desde panel.html: si el panel ya validó ADMIN_SST, entra directo ──
+(function () {
+  try {
+    const u = sessionStorage.getItem('sst_adm_usr'), p = sessionStorage.getItem('sst_adm_pwd');
+    if (u && p) { document.getElementById('adm-usr').value = u; document.getElementById('adm-pwd').value = p; doLogin(); }
+  } catch (e) {}
+})();
 
 function renderUnidades(lista) {
   const container = document.getElementById('unit-list');
