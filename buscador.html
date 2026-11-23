@@ -87,7 +87,6 @@
       <div>Archivos PDF<b id="k-arch">0</b></div>
       <div>Indexados<b id="k-idx">0</b></div>
       <div>Páginas leídas<b id="k-pag">0</b></div>
-      <div>Con OCR<b id="k-ocr">0</b></div>
       <div>Pendientes<b id="k-pend">0</b></div>
     </div>
     <div class="prog"><i id="prog"></i></div>
@@ -255,7 +254,7 @@ async function refrescarKpi() {
   const porRuta = {}; hechos.forEach(a => porRuta[a.ruta] = a);
   let idx = 0, pag = 0, ocr = 0, pend = 0;
   ARCHIVOS.forEach(a => { const d = porRuta[a.ruta]; if (d && d.size === a.size && d.mtime === a.mtime && d.done) { idx++; pag += d.pages; ocr += d.ocr || 0; } else pend++; });
-  $('k-arch').textContent = ARCHIVOS.length; $('k-idx').textContent = idx; $('k-pag').textContent = pag; $('k-ocr').textContent = ocr; $('k-pend').textContent = pend;
+  $('k-arch').textContent = ARCHIVOS.length; $('k-idx').textContent = idx; $('k-pag').textContent = pag; $('k-pend').textContent = pend;
   $('prog').style.width = ARCHIVOS.length ? Math.round(idx / ARCHIVOS.length * 100) + '%' : '0%';
   if (!INDEXANDO) $('idx-estado').textContent = pend ? pend + ' archivo(s) por indexar. Puedes buscar ya en lo indexado.' : (idx ? 'Índice completo y al día.' : 'Sin indexar. La primera vez tarda (OCR de escaneos); después solo lee lo nuevo.');
   return pend;
