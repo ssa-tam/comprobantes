@@ -109,6 +109,19 @@
     <div class="msg" id="msg-q"></div>
   </div>
 
+  <div class="card">
+    <h2><span class="step">?</span> Revisar una página (para ver qué leyó el sistema)</h2>
+    <div class="row">
+      <select id="rev-arch" style="flex:1 1 320px"><option value="">— Archivo —</option></select>
+      <label class="muted" for="rev-pag">Página</label>
+      <input type="text" id="rev-pag" placeholder="142" style="width:90px" />
+      <button class="btn-sec" id="b-rev" type="button">Ver página</button>
+      <button class="btn-sec" id="b-reocr" type="button">Volver a leer con OCR (prueba giros)</button>
+      <button class="btn-sec" id="b-rearch" type="button">Reindexar este archivo</button>
+    </div>
+    <div class="msg" id="msg-rev"></div>
+  </div>
+
   <div class="res" id="res" style="display:none">
     <div class="card">
       <h2>Coincidencias <span class="pill" id="n-hits">0</span></h2>
@@ -200,7 +213,7 @@ function dbDelByPrefix(store, prefix) {
 
 // ───────────────────────── Estado ─────────────────────────
 let DIR = null, CARPETA = '', ARCHIVOS = [];   // ARCHIVOS: [{ruta, handle, size, mtime}]
-let INDEXANDO = false, PAUSA = false, SCHED = null;
+let INDEXANDO = false, PAUSA = false, SCHED = null, OCR_OK = true;
 let HITS = [], SEL = null, PDF_CACHE = { ruta: null, doc: null, buf: null };
 
 async function iniciar() {
@@ -226,6 +239,7 @@ async function iniciar() {
   };
   $('f-buscar').onsubmit = e => { e.preventDefault(); buscar(); };
   $('sub').onchange = () => { if (HITS.length) buscar(); };
+  $('b-rev').onclick = () => revisar(false); $('b-reocr').onclick = () => revisar(true); $('b-rearch').onclick = reindexarArchivo;
   $('b-png').onclick = descargarPNG; $('b-pdf').onclick = descargarPDF; $('b-zoom').onclick = () => { const c = $('cv'); const w = window.open(''); if (w) { w.document.write('<title>' + esc(SEL ? SEL.ruta : '') + '</title><img style="max-width:100%" src="' + c.toDataURL('image/png') + '">'); } };
 }
 
@@ -245,6 +259,7 @@ async function usarCarpeta(h) {
   const sel = $('sub'); sel.innerHTML = '<option value="">Toda la carpeta</option>';
   [...subs].sort().forEach(s => { const o = document.createElement('option'); o.value = s; o.textContent = s + ' (' + ARCHIVOS.filter(a => a.ruta.startsWith(s + '/')).length + ')'; sel.appendChild(o); });
   $('sub-row').style.display = subs.size ? '' : 'none';
+  const ra = $('rev-arch'); ra.innerHTML = '<option value="">— Archivo —</option>'; ARCHIVOS.forEach(a => { const o = document.createElement('option'); o.value = a.ruta; o.textContent = a.ruta; ra.appendChild(o); });
   $('card-indice').style.display = ''; $('card-buscar').style.display = '';
   await refrescarKpi();
 }
@@ -274,13 +289,29 @@ async function textoPagina(page) {
   tc.items.forEach(it => { if (!it.str) return; if (last && it.transform && last.transform && Math.abs(it.transform[5] - last.transform[5]) > 2) s += '\n'; s += it.str + ' '; last = it; });
   return s;
 }
-async function ocrPagina(page) {
+// OCR probando giros: 0°, y si la lectura sale pobre, 180°, 90° y 270° (las unidades escanean en cualquier orientación)
+async function ocrPagina(page, forzarGiros) {
   const vp = page.getViewport({ scale: 1.6 });
-  const c = document.createElement('canvas'); c.width = vp.width; c.height = vp.height;
-  await page.render({ canvasContext: c.getContext('2d'), viewport: vp }).promise;
+  const base = document.createElement('canvas'); base.width = vp.width; base.height = vp.height;
+  await page.render({ canvasContext: base.getContext('2d'), viewport: vp }).promise;
   const sch = await getScheduler();
-  const r = await sch.addJob('recognize', c);
-  return r.data.text || '';
+  const calidad = t => { const n = norm(t); const letras = (n.match(/[A-ZÑ]{3,}/g) || []).length; return letras; };
+  let mejor = { texto: '', q: -1, giro: 0 };
+  for (const giro of [0, 180, 90, 270]) {
+    const c = giro === 0 ? base : girar(base, giro);
+    const r = await sch.addJob('recognize', c);
+    const t = r.data.text || ''; const q = calidad(t) + (r.data.confidence || 0) / 10;
+    if (q > mejor.q) mejor = { texto: t, q, giro };
+    // si ya leyó bien (bastantes palabras y confianza razonable), no probar más giros
+    if (!forzarGiros && calidad(t) >= 25 && (r.data.confidence || 0) >= 55) break;
+  }
+  return mejor.texto;
+}
+function girar(src, grados) {
+  const c = document.createElement('canvas'); const lado = grados === 90 || grados === 270;
+  c.width = lado ? src.height : src.width; c.height = lado ? src.width : src.height;
+  const ctx = c.getContext('2d'); ctx.translate(c.width / 2, c.height / 2); ctx.rotate(grados * Math.PI / 180); ctx.drawImage(src, -src.width / 2, -src.height / 2);
+  return c;
 }
 async function indexar() {
   if (INDEXANDO || !ARCHIVOS.length) return;
@@ -302,7 +333,10 @@ async function indexar() {
         if (PAUSA) break;
         const page = await doc.getPage(p);
         let txt = await textoPagina(page); let fue = false;
-        if (norm(txt).length < 40) { txt = await ocrPagina(page); fue = true; ocrN++; }
+        if ((norm(txt).match(/[A-ZÑ]{3,}/g) || []).length < 12 && OCR_OK) {
+          try { const t2 = await ocrPagina(page); if (norm(t2).length > norm(txt).length) { txt = t2; fue = true; ocrN++; } }
+          catch (e) { OCR_OK = false; msg('msg-idx', 'El OCR no está disponible (no cargó el motor de reconocimiento; revisa la conexión a internet). Se indexa solo el texto que traen los PDF.', 'warn'); }
+        }
         await dbPut('paginas', { k: CARPETA + '|' + a.ruta + '|' + p, carpeta: CARPETA, ruta: a.ruta, pag: p, n: doc.numPages, texto: txt.slice(0, 20000), norm: ' ' + norm(txt) + ' ', ocr: fue });
         pagsHechas++;
         const seg = (Date.now() - t0) / 1000, vel = pagsHechas / seg;
@@ -319,17 +353,19 @@ async function indexar() {
 }
 
 // ───────────────────────── Búsqueda ─────────────────────────
+// Devuelve {score, faltan}: score por palabra (2 exacta, 1 aproximada); faltan = palabras que no aparecen
 function coincide(pageNorm, tokens) {
-  let score = 0;
+  let score = 0, faltan = 0; let words = null;
   for (const t of tokens) {
     if (pageNorm.indexOf(' ' + t + ' ') >= 0) { score += 2; continue; }
-    if (t.length < 5) return 0;
-    // tolerancia a OCR: alguna palabra de la página a distancia 1 (o 2 si es larga)
-    const words = pageNorm.split(' '); let ok = false; const tol = t.length >= 9 ? 2 : 1;
-    for (const w of words) { if (!w || Math.abs(w.length - t.length) > tol) continue; if (lev(w, t) <= tol) { ok = true; break; } }
-    if (!ok) return 0; score += 1;
+    if (t.length < 4) { faltan++; continue; }
+    // tolerancia a errores de OCR: alguna palabra de la página a distancia 1 (2 si es larga); también palabra pegada (GONZALEZANAYA)
+    if (!words) words = pageNorm.split(' ');
+    const tol = t.length >= 9 ? 2 : 1; let ok = false;
+    for (const w of words) { if (!w) continue; if (w.length > t.length + 3 && w.indexOf(t) >= 0) { ok = true; break; } if (Math.abs(w.length - t.length) > tol) continue; if (lev(w, t) <= tol) { ok = true; break; } }
+    if (ok) score += 1; else faltan++;
   }
-  return score;
+  return { score, faltan };
 }
 async function buscar() {
   const q = $('q').value.trim(); msg('msg-q', ''); if (!q) return;
@@ -340,10 +376,11 @@ async function buscar() {
   const t0 = Date.now(); HITS = [];
   for (const p of paginas) {
     if (sub && !p.ruta.startsWith(sub + '/')) continue;
-    const sc = coincide(p.norm, tokens);
-    if (sc > 0) HITS.push({ ruta: p.ruta, pag: p.pag, n: p.n, texto: p.texto, score: sc, ocr: p.ocr });
+    const r = coincide(p.norm, tokens);
+    // completa: todas las palabras; posible: falta una (solo si se buscaron 3 o más)
+    if (r.faltan === 0 || (tokens.length >= 3 && r.faltan === 1 && r.score >= 3)) HITS.push({ ruta: p.ruta, pag: p.pag, n: p.n, texto: p.texto, score: r.score, parcial: r.faltan > 0, ocr: p.ocr });
   }
-  HITS.sort((a, b) => b.score - a.score || a.ruta.localeCompare(b.ruta) || a.pag - b.pag);
+  HITS.sort((a, b) => (a.parcial - b.parcial) || b.score - a.score || a.ruta.localeCompare(b.ruta) || a.pag - b.pag);
   $('q-info').textContent = HITS.length + ' coincidencia(s) en ' + paginas.length + ' páginas indexadas · ' + ((Date.now() - t0) / 1000).toFixed(2) + ' s';
   if (!paginas.length) msg('msg-q', 'Todavía no hay páginas indexadas de esta carpeta. Pulsa "Indexar / actualizar".', 'warn');
   else if (!HITS.length) msg('msg-q', 'No se encontró "' + q + '". Prueba con menos palabras (p. ej. solo apellidos) o revisa que el archivo esté indexado.', 'warn');
@@ -359,7 +396,7 @@ function pintarHits(tokens) {
     const nt = norm(h.texto); let pos = -1; for (const t of tokens) { pos = nt.indexOf(t); if (pos >= 0) break; }
     const snip = h.texto.replace(/\s+/g, ' ').slice(Math.max(0, pos - 60), pos + 140);
     const snipHtml = re ? esc(snip).replace(re, m => '<mark>' + m + '</mark>') : esc(snip);
-    d.innerHTML = '<div style="display:flex;justify-content:space-between;gap:8px;align-items:center"><b>' + esc(arch) + '</b><span class="pag">pág. ' + h.pag + ' / ' + h.n + '</span></div><div class="ruta">' + esc(carp || CARPETA) + (h.ocr ? ' · OCR' : '') + '</div><div class="snip">…' + snipHtml + '…</div>';
+    d.innerHTML = '<div style="display:flex;justify-content:space-between;gap:8px;align-items:center"><b>' + esc(arch) + '</b><span class="pag">pág. ' + h.pag + ' / ' + h.n + '</span></div><div class="ruta">' + esc(carp || CARPETA) + (h.ocr ? ' · OCR' : '') + (h.parcial ? ' · <span style="color:#8A5A12;font-weight:700">posible coincidencia (falta una palabra)</span>' : '') + '</div><div class="snip">…' + snipHtml + '…</div>';
     d.onclick = () => abrirHit(h, d);
     box.appendChild(d);
   });
@@ -412,6 +449,33 @@ async function descargarPDF() {
     const bytes = await out.save(); const blob = new Blob([bytes], { type: 'application/pdf' });
     const a = document.createElement('a'); a.download = (SEL.ruta.split('/').pop().replace(/\.pdf$/i, '')) + '_pag' + SEL.pag + '.pdf'; a.href = URL.createObjectURL(blob); a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 5000);
   } catch (e) { msg('msg-q', 'No se pudo generar el PDF de la página: ' + e.message); }
+}
+// Revisar una página concreta: muestra imagen + texto guardado; con OCR vuelve a leerla (probando giros) y actualiza el índice
+async function revisar(conOcr) {
+  const ruta = $('rev-arch').value, pag = parseInt($('rev-pag').value); msg('msg-rev', '');
+  if (!ruta || !(pag >= 1)) { msg('msg-rev', 'Elige el archivo y escribe el número de página.'); return; }
+  try {
+    const { doc } = await cargarPdf(ruta);
+    if (pag > doc.numPages) { msg('msg-rev', 'Ese archivo tiene ' + doc.numPages + ' páginas.'); return; }
+    let reg = await dbGet('paginas', CARPETA + '|' + ruta + '|' + pag);
+    if (conOcr || !reg) {
+      msg('msg-rev', 'Leyendo la página ' + pag + (conOcr ? ' con OCR (probando giros)…' : '…'), 'warn');
+      const page = await doc.getPage(pag); let txt = '', fue = false;
+      if (conOcr) { try { txt = await ocrPagina(page, true); fue = true; } catch (e) { msg('msg-rev', 'El OCR no está disponible (no cargó el motor; revisa la conexión). Se muestra el texto que trae el PDF.', 'warn'); } }
+      if (!fue) txt = await textoPagina(page);
+      reg = { k: CARPETA + '|' + ruta + '|' + pag, carpeta: CARPETA, ruta, pag, n: doc.numPages, texto: txt.slice(0, 20000), norm: ' ' + norm(txt) + ' ', ocr: fue };
+      await dbPut('paginas', reg);
+      if (fue) msg('msg-rev', 'Página releída con OCR y guardada en el índice (' + (norm(txt).match(/[A-ZÑ]{3,}/g) || []).length + ' palabras legibles).', 'ok');
+    }
+    HITS = [{ ruta, pag, n: reg.n, texto: reg.texto, score: 0, ocr: reg.ocr }];
+    pintarHits([]);
+    if (!/guardada|OCR no/.test($('msg-rev').textContent)) msg('msg-rev', 'Página ' + pag + ' mostrada. Abajo, "Texto leído de la página" es lo que el buscador tiene guardado; si está vacío o ilegible, usa "Volver a leer con OCR".', 'ok');
+  } catch (e) { msg('msg-rev', 'No se pudo: ' + (e && e.message ? e.message : e)); }
+}
+async function reindexarArchivo() {
+  const ruta = $('rev-arch').value; if (!ruta) { msg('msg-rev', 'Elige el archivo.'); return; }
+  await dbDelByPrefix('archivos', CARPETA + '|' + ruta); await dbDelByPrefix('paginas', CARPETA + '|' + ruta + '|');
+  await refrescarKpi(); msg('msg-rev', 'Archivo marcado para reindexar. Pulsa "Indexar / actualizar".', 'ok');
 }
 // Bitácora local de consultas (quién, qué, cuándo, cuántas coincidencias)
 async function registrar(q, n) {
